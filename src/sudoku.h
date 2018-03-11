@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-typedef int val_type;
-typedef int pos_type;
+typedef unsigned int val_type;
+typedef unsigned int pos_type;
 
 #define _for_val(val) for (val_type val = 1; val <= 9; val++)
 #define _for_all_places(i_src, j_src) for (pos_type i_src = 0, j_src = 0; \

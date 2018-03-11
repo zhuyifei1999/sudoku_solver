@@ -5,7 +5,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-
 bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
   // sanity checks: bounds
   assert(i >= 0 && i < 9);
@@ -83,6 +82,7 @@ void solve_sudoku(val_type sudoku_arr[9][9]) {
 
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
+    _strategy_wrapper(naked_pair_plus(sudoku))
 
 #undef _strategy_wrapper
 

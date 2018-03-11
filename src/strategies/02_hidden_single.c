@@ -36,7 +36,7 @@ bool _is_hidden_single(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
 }
 
 bool hidden_single(sudoku *sudoku) {
-  int c = false;
+  bool c = false;
   _for_val(val) {
     _for_all_places(i, j) {
       if (sudoku->arr[i][j]) continue;
