@@ -3,6 +3,9 @@
 
 #include "../strategic.h"
 
+// A good video: https://www.youtube.com/watch?v=b123EURtu3I
+
 bool naked_single(sudoku *sudoku);
+bool hidden_single(sudoku *sudoku);
 
 #endif
