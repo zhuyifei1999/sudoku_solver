@@ -1,4 +1,5 @@
 #include "strategic.h"
+#include "strategies/all_strategy.h"
 #include "debug.h"
 
 #include <assert.h>
@@ -32,7 +33,7 @@ bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
       sudoku->poststack[sudoku->poststacksize++] = j;
     }
 
-    debug_print("decr: %d %d %d\n", i, j, val);
+    debug_print("%d %d %d\n", i, j, val);
   }
   return p >= 0;
 }
@@ -61,20 +62,33 @@ void solve_sudoku(val_type sudoku_arr[9][9]) {
     sudoku->arr[i][j] = 0;
     if (sudoku_arr[i][j]) {
       sudoku->possibilities[i][j] = (int *)malloc(2*sizeof(int));
+      // only possibility
       sudoku->possibilities[i][j][0] = sudoku_arr[i][j];
       sudoku->possibilities[i][j][1] = 0;
       sudoku->poststack[sudoku->poststacksize++] = i;
       sudoku->poststack[sudoku->poststacksize++] = j;
     } else {
-      int k;
+      // all 9 possibilities
       sudoku->possibilities[i][j] = (int *)malloc(10*sizeof(int));
-      for (k = 0; k < 9; k++) {
-        sudoku->possibilities[i][j][k] = k+1;
+      _for_val(k) {
+        sudoku->possibilities[i][j][k-1] = k;
       }
       sudoku->possibilities[i][j][9] = 0;
     }
   }
   while (true) {
+    bool c = false;
+
+#define _strategy_wrapper(f) c |= f; if (c) continue;
+
+    _strategy_wrapper(naked_single(sudoku))
+
+#undef _strategy_wrapper
+
     break;
+  }
+
+  _for_all_places(i, j) {
+    sudoku_arr[i][j] = sudoku->arr[i][j];
   }
 }

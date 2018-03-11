@@ -64,6 +64,8 @@ dkms.conf
 Makefile
 Makefile.in
 /missing
+.dirstamp
 
 # build
 /src/sudoku_strategic
+core
