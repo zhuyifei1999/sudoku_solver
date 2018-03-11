@@ -68,4 +68,5 @@ Makefile.in
 
 # build
 /src/sudoku_strategic
+/src/sudoku_brute
 core
