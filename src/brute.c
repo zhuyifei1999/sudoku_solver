@@ -24,14 +24,14 @@ bool _solve_sudoku(val_type sudoku[9][9], pos_type c) {
     for (val = 1; val <= 9; val++) {
       if (_is_val_valid(sudoku, i, j, val)) {
         sudoku[i][j] = val;
-        if (_solve_sudoku(sudoku, a + 1)) return 1;
+        if (_solve_sudoku(sudoku, a + 1)) return true;
       }
     }
     // uh oh... no valid and successful value found
     if (val > 9) sudoku[i][j] = 0;
-    return 0;
+    return false;
   }
-  return 1;
+  return true;
 }
 
 void solve_sudoku(val_type sudoku[9][9]) {

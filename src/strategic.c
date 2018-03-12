@@ -11,10 +11,11 @@ bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
   assert(j >= 0 && j < 9);
   assert(val > 0 && val <= 9);
 
-  int *poss = sudoku->possibilities[i][j];
+  val_type *poss = sudoku->possibilities[i][j];
 
   // k = # of possibility left
-  int k, v, p = -1;
+  pos_type k, p = -1;
+  val_type v;
   for (k = 0; (v = poss[k]); k++) {
     if (v == val) p = k;
   }
@@ -60,7 +61,7 @@ void solve_sudoku(val_type sudoku_arr[9][9]) {
   _for_all_places(i, j) {
     sudoku->arr[i][j] = 0;
     if (sudoku_arr[i][j]) {
-      sudoku->possibilities[i][j] = (int *)malloc(2*sizeof(int));
+      sudoku->possibilities[i][j] = (val_type *)malloc(2*sizeof(val_type));
       // only possibility
       sudoku->possibilities[i][j][0] = sudoku_arr[i][j];
       sudoku->possibilities[i][j][1] = 0;
@@ -68,7 +69,7 @@ void solve_sudoku(val_type sudoku_arr[9][9]) {
       sudoku->poststack[sudoku->poststacksize++] = j;
     } else {
       // all 9 possibilities
-      sudoku->possibilities[i][j] = (int *)malloc(10*sizeof(int));
+      sudoku->possibilities[i][j] = (val_type *)malloc(10*sizeof(val_type));
       _for_val(k) {
         sudoku->possibilities[i][j][k-1] = k;
       }
@@ -83,6 +84,7 @@ void solve_sudoku(val_type sudoku_arr[9][9]) {
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
     _strategy_wrapper(naked_pair_plus(sudoku))
+    _strategy_wrapper(pointing_pair_plus(sudoku))
 
 #undef _strategy_wrapper
 

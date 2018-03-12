@@ -44,8 +44,8 @@ bool hidden_single(sudoku *sudoku) {
 
       if (!_is_hidden_single(sudoku, i, j, val)) continue;
 
-      debug_print("%d %d %d\n", i, j, val);
       place(sudoku, i, j, val);
+      debug_print("%d %d %d\n", i, j, val);
       c = true;
     }
   }

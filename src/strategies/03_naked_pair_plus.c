@@ -4,7 +4,7 @@
 
 #include <assert.h>
 
-bool _cluster(sudoku *sudoku, pos_type i, pos_type j, val_type *poss, pos_type size,
+bool _naked_pair_cluster(sudoku *sudoku, pos_type i, pos_type j, val_type *poss, pos_type size,
   void (*init)(pos_type *, pos_type *, pos_type, pos_type),
   bool (*next)(pos_type *, pos_type *)
 ) {
@@ -46,9 +46,9 @@ bool naked_pair_plus(sudoku *sudoku) {
 
     bool c = false;
 
-    c |= _cluster(sudoku, i, j, poss, size, &_place_vert_gen_init, &_place_vert_gen_next);
-    c |= _cluster(sudoku, i, j, poss, size, &_place_horz_gen_init, &_place_horz_gen_next);
-    c |= _cluster(sudoku, i, j, poss, size, &_place_cell_gen_init, &_place_cell_gen_next);
+    c |= _naked_pair_cluster(sudoku, i, j, poss, size, &_place_vert_gen_init, &_place_vert_gen_next);
+    c |= _naked_pair_cluster(sudoku, i, j, poss, size, &_place_horz_gen_init, &_place_horz_gen_next);
+    c |= _naked_pair_cluster(sudoku, i, j, poss, size, &_place_cell_gen_init, &_place_cell_gen_next);
 
     if (c) debug_print("%d %d\n", i, j);
 
