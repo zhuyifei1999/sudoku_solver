@@ -13,4 +13,6 @@
 #define debug_print(...) do {} while (0)
 #endif
 
+#define UNUSED(x) (void)(x)
+
 #endif

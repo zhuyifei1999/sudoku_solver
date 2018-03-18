@@ -53,17 +53,14 @@ dkms.conf
 
 # autotools
 .deps/
+/build-aux/
 /autom4te.cache
 /aclocal.m4
-/compile
 /config.log
 /config.status
 /configure
-/depcomp
-/install-sh
 Makefile
 Makefile.in
-/missing
 .dirstamp
 
 # build

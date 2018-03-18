@@ -80,12 +80,11 @@ void solve_sudoku(val_type sudoku_arr[9][9]) {
     bool c = false;
 
 #define _strategy_wrapper(f) c |= f; if (c) continue;
-
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
     _strategy_wrapper(naked_pair_plus(sudoku))
     _strategy_wrapper(pointing_pair_plus(sudoku))
-
+    _strategy_wrapper(claiming_pair_plus(sudoku))
 #undef _strategy_wrapper
 
     break;
