@@ -1,4 +1,5 @@
 #include "strategic.h"
+#include "possibility.h"
 #include "strategies/all_strategy.h"
 #include "debug.h"
 
@@ -36,6 +37,22 @@ bool decr_possible(sudoku *sudoku, pos_type position, val_type val) {
     debug_print("%d %d %d\n", i, j, val);
   }
   return p >= 0;
+}
+
+bool truncate_possible(sudoku *sudoku, pos_type position, val_type *poss_arr, bool intersect) {
+  bool f = false;
+  if (intersect) {
+    for_val(val) {
+      if (is_val_possible(poss_arr, val)) continue;
+      f |= decr_possible(sudoku, position, val);
+    }
+  } else {
+    val_type post, val;
+    for (post = 0; (val = poss_arr[post]); post++) {
+      f |= decr_possible(sudoku, position, val);
+    }
+  }
+  return f;
 }
 
 void place(sudoku *sudoku, pos_type position, val_type val) {
@@ -82,7 +99,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
 #define _strategy_wrapper(f) c |= f; if (c) continue;
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
-    // _strategy_wrapper(naked_pair_plus(sudoku))
+    _strategy_wrapper(naked_pair_plus(sudoku))
     // _strategy_wrapper(pointing_pair_plus(sudoku))
     // _strategy_wrapper(claiming_pair_plus(sudoku))
 #undef _strategy_wrapper

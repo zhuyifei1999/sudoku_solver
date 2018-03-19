@@ -7,7 +7,7 @@
 
 bool naked_single(sudoku *sudoku);
 bool hidden_single(sudoku *sudoku);
-// bool naked_pair_plus(sudoku *sudoku);
+bool naked_pair_plus(sudoku *sudoku);
 // bool pointing_pair_plus(sudoku *sudoku);
 // bool claiming_pair_plus(sudoku *sudoku);
 

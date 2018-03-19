@@ -1,58 +1,67 @@
 #include "../strategic.h"
 #include "../debug.h"
 #include "../possibility.h"
+#include "../combination.h"
 
-#include <assert.h>
+typedef struct _state {
+  struct sudoku *sudoku;
+  struct cluster *cluster;
+  bool found;
+} _state;
 
-static bool _cluster(sudoku *sudoku, pos_type i, pos_type j, val_type *poss, pos_type size,
-  void (*init)(pos_type *, pos_type *, pos_type, pos_type),
-  bool (*next)(pos_type *, pos_type *)
-) {
-  pos_type s = size;
+static void _cluster_cb(int n, pos_type *positions, void *state_ptr) {
+  _state *state = (_state *)state_ptr;
+  val_type poss_arr[10] = {0};
 
-  pos_type ai, aj;
-  (*init)(&ai, &aj, i, j);
-  do {
-    // find # of exclusion
-    if (is_exact_same_poss(sudoku->possibilities[ai][aj], poss)) s--;
-  } while ((*next)(&ai, &aj));
+  // find all posssibilities in the combinations
+  for (int i = 0; i < n; i++) {
+    pos_type pos = positions[i];
+    if (state->sudoku->arr[pos.i][pos.j]) return;
+    copy_poss(state->sudoku->possibilities[pos.i][pos.j], poss_arr);
+  }
 
-  assert(s >= 0);
-  if (s) return false;
+  // pass the test if # of possibilities == number of positions
+  if (poss_size(poss_arr) != n) return;
 
-  bool c = false;
-  (*init)(&ai, &aj, i, j);
-  do {
-    // not exclusion => decr
-    if (!is_exact_same_poss(sudoku->possibilities[ai][aj], poss)) {
-      pos_type post;
-      val_type val;
-      for (post = 0; (val = poss[post]); post++) {
-        c |= decr_possible(sudoku, ai, aj, val);
-      }
+  bool f = false;
+
+  // positions in the culster not part of the combination cannot have any
+  // possibility the combination claimed
+  for_pos_cluster(c, *state->cluster, pos, ({
+    int i;
+    for (i = 0; i < n; i++) {
+      if (is_pos_equal(positions[i], pos)) break;
     }
-  } while ((*next)(&ai, &aj));
-  return c;
+    if (!is_pos_equal(positions[i], pos)) {
+      f |= truncate_possible(state->sudoku, pos, poss_arr, false);
+    }
+  }))
+
+  if (f) debug_print("%s %d %d\n", state->cluster->gen->name,
+    state->cluster->rel.i, state->cluster->rel.j);
+
+  state->found |= f;
 }
 
+static bool _cluster_gen(sudoku *sudoku, cluster_gen gen) {
+  _state state = { .sudoku = sudoku, .found = false };
+  for_pos_cluster(initc, *gen.complement, initpos, ({
+    cluster c = cluster(initpos, gen);
+    state.cluster = &c;
+    for (int n = 2; n <= 4; n++) {
+      // select all combinations of 2-4 in the cluster
+      combination_cluster(n, c, &_cluster_cb, &state);
+    }
+  }))
+  return state.found;
+}
 
 bool naked_pair_plus(sudoku *sudoku) {
   bool f = false;
-  _for_all_places(i, j) {
-    if (sudoku->arr[i][j]) continue;
 
-    val_type *poss = sudoku->possibilities[i][j];
-    pos_type size = poss_size(poss);
+  f |= _cluster_gen(sudoku, horz_c);
+  f |= _cluster_gen(sudoku, vert_c);
+  f |= _cluster_gen(sudoku, cell_c);
 
-    bool c = false;
-
-    c |= _cluster(sudoku, i, j, poss, size, &_place_vert_gen_init, &_place_vert_gen_next);
-    c |= _cluster(sudoku, i, j, poss, size, &_place_horz_gen_init, &_place_horz_gen_next);
-    c |= _cluster(sudoku, i, j, poss, size, &_place_cell_gen_init, &_place_cell_gen_next);
-
-    if (c) debug_print("%d %d\n", i, j);
-
-    f |= c;
-  }
   return f;
 }

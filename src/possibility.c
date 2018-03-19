@@ -26,3 +26,15 @@ int poss_size(val_type *possibilities) {
   for (post = 0; possibilities[post]; post++) {}
   return post;
 }
+
+void copy_poss(val_type *src, val_type *target) {
+  // TODO: optimize this
+  val_type post, val;
+  for (post = 0; (val = src[post]); post++) {
+    if (!is_val_possible(target, val)) {
+      int size = poss_size(target);
+      target[size] = val;
+      target[size+1] = 0;
+    }
+  }
+}

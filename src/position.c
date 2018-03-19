@@ -16,6 +16,7 @@ cluster_gen vert_c = {
   .init = &_p_vert_init,
   .next = &_p_vert_next,
   .complement = &vert_ic,
+  .name = "vert",
 };
 
 static void _p_horz_init(pos_type *target, const pos_type src) {
@@ -32,6 +33,7 @@ cluster_gen horz_c = {
   .init = &_p_horz_init,
   .next = &_p_horz_next,
   .complement = &horz_ic,
+  .name = "horz",
 };
 
 static void _p_cellgen_init(pos_type *target, const pos_type src) {
@@ -44,6 +46,7 @@ static cluster_gen cellgen_c = {
   .init = &_p_cellgen_init,
   .next = &_p_cellgen_next,
   .complement = NULL,
+  .name = NULL,
 };
 static void _p_cell_init(pos_type *target, const pos_type src) {
   target->i = src.i / 3 * 3; target->j = src.j / 3 * 3;
@@ -59,6 +62,7 @@ cluster_gen cell_c = {
   .init = &_p_cell_init,
   .next = &_p_cell_next,
   .complement = &cell_ic,
+  .name = "cell",
 };
 
 static void _p_all_init(pos_type *target, const pos_type src) {
@@ -71,4 +75,5 @@ cluster_gen all_c = {
   .init = &_p_all_init,
   .next = &_p_all_next,
   .complement = NULL,
+  .name = "all",
 };

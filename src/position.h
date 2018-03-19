@@ -14,6 +14,7 @@ typedef struct cluster_gen {
   void (*init)(pos_type *target, const pos_type src);
   bool (*next)(pos_type *target);
   const struct cluster *complement;
+  const char *name;
 } cluster_gen;
 
 extern cluster_gen vert_c, horz_c, cell_c, all_c;
@@ -22,8 +23,6 @@ typedef struct cluster {
   const pos_type rel;
   const struct cluster_gen *gen;
 } cluster;
-
-#define for_val(val) for (val_type val = 1; val <= 9; val++)
 
 #define cluster(pos_src, cluster_gen) { .rel = pos_src, .gen = &cluster_gen }
 
@@ -39,6 +38,6 @@ typedef struct cluster {
 #define for_pos_cluster_zero(cluster_var, cluster_gen, position_var, body) \
   for_pos_cluster(cluster_var, cluster(zero_pos, cluster_gen), position_var, body)
 
-#define _is_pos_equal(x, y) (x.i == y.i && x.j == y.j)
+#define is_pos_equal(x, y) (x.i == y.i && x.j == y.j)
 
 #endif
