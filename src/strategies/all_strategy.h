@@ -7,8 +7,8 @@
 
 bool naked_single(sudoku *sudoku);
 bool hidden_single(sudoku *sudoku);
-bool naked_pair_plus(sudoku *sudoku);
+bool naked_candidates(sudoku *sudoku);
 bool intersection_removal(sudoku *sudoku);
-bool hidden_pair_plus(sudoku *sudoku);
+bool hidden_candidates(sudoku *sudoku);
 
 #endif

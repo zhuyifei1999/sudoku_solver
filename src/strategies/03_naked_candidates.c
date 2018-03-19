@@ -57,7 +57,7 @@ static bool _cluster_gen(sudoku *sudoku, cluster_gen_t gen) {
   return state.found;
 }
 
-bool naked_pair_plus(sudoku *sudoku) {
+bool naked_candidates(sudoku *sudoku) {
   bool f = false;
 
   f |= _cluster_gen(sudoku, horz_c);

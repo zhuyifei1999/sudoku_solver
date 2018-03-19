@@ -68,7 +68,7 @@ static bool _cluster(sudoku *sudoku, cluster_t cluster) {
 }
 
 
-bool hidden_pair_plus(sudoku *sudoku) {
+bool hidden_candidates(sudoku *sudoku) {
   bool f = false;
 
   for_pos_cluster(initc, *horz_c.complement, initpos, ({

@@ -99,9 +99,9 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
 #define _strategy_wrapper(f) c |= f; if (c) continue;
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
-    _strategy_wrapper(naked_pair_plus(sudoku))
+    _strategy_wrapper(naked_candidates(sudoku))
     _strategy_wrapper(intersection_removal(sudoku))
-    _strategy_wrapper(hidden_pair_plus(sudoku))
+    _strategy_wrapper(hidden_candidates(sudoku))
 
     break;
   }
