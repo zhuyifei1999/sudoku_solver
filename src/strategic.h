@@ -2,13 +2,12 @@
 #define STRATEGIC_H_
 
 #include "sudoku.h"
-#include "possibility.h"
+#include "stack.h"
 
 typedef struct sudoku_t {
   val_t arr[9][9];
   val_t *possibilities[9][9];
-  pos_t poststack[9*9];
-  poss_i_t poststacksize;
+  struct_stack(pos_t, ns_pos, 9*9)
 } sudoku_t;
 
 // remove the val possibility of sudoku at position

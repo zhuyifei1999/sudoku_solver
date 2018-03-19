@@ -2,9 +2,9 @@
 #include "../debug.h"
 
 bool naked_single(sudoku_t *sudoku) {
-  if (!sudoku->poststacksize) return false;
-  while (sudoku->poststacksize) {
-    pos_t pos = sudoku->poststack[--sudoku->poststacksize];
+  if (!stack_size(sudoku->ns_pos)) return false;
+  while (stack_size(sudoku->ns_pos)) {
+    pos_t pos = stack_pop(sudoku->ns_pos);
     val_t val = sudoku->possibilities[pos.i][pos.j][0];
     place(sudoku, pos, val);
     debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", pos.i, pos.j, val);

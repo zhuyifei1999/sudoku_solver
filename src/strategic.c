@@ -31,7 +31,7 @@ bool decr_possible(sudoku_t *sudoku, pos_t position, val_t val) {
 
     // push to stack for 'naked single' method
     if (k == 2) {
-      sudoku->poststack[sudoku->poststacksize++] = position;
+      stack_push(sudoku->ns_pos, position);
     }
 
     debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", i, j, val);
@@ -75,7 +75,7 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
 
 void solve_sudoku(sudoku_arr sudoku_arr) {
   sudoku_t *sudoku = (sudoku_t *)malloc(sizeof(sudoku_t));
-  sudoku->poststacksize = 0;
+  stack_init(sudoku->ns_pos);
   for_pos_cluster_zero(c, all_c, pos, ({
     sudoku->arr[pos.i][pos.j] = 0;
     if (sudoku_arr[pos.i][pos.j]) {
@@ -83,7 +83,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
       // only possibility
       sudoku->possibilities[pos.i][pos.j][0] = sudoku_arr[pos.i][pos.j];
       sudoku->possibilities[pos.i][pos.j][1] = 0;
-      sudoku->poststack[sudoku->poststacksize++] = pos;
+      stack_push(sudoku->ns_pos, pos);
     } else {
       // all 9 possibilities
       sudoku->possibilities[pos.i][pos.j] = (val_t *)malloc(10*sizeof(val_t));
