@@ -28,7 +28,7 @@ typedef struct cluster {
   const struct cluster_gen *gen;
 } cluster;
 
-#define cluster(pos_src, cluster_gen) { .rel = pos_src, .gen = &cluster_gen }
+#define cluster(pos_src, cluster_gen) (cluster){ .rel = pos_src, .gen = &cluster_gen }
 
 #define for_pos_cluster(cluster_var, cluster_exp, position_var, body) { \
   cluster cluster_var = cluster_exp; \
@@ -43,5 +43,6 @@ typedef struct cluster {
   for_pos_cluster(cluster_var, cluster(zero_pos, cluster_gen), position_var, body)
 
 #define is_pos_equal(x, y) (x.i == y.i && x.j == y.j)
+bool is_pos_cluster(pos_t pos, cluster cluster);
 
 #endif

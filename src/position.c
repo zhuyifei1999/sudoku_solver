@@ -77,3 +77,10 @@ cluster_gen all_c = {
   .complement = NULL,
   .name = "all",
 };
+
+bool is_pos_cluster(pos_t pos, cluster cluster) {
+  pos_t pos1, pos2;
+  (*cluster.gen->init)(&pos1, pos);
+  (*cluster.gen->init)(&pos2, cluster.rel);
+  return is_pos_equal(pos1, pos2);
+}

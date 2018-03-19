@@ -100,9 +100,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
     _strategy_wrapper(naked_pair_plus(sudoku))
-    // _strategy_wrapper(pointing_pair_plus(sudoku))
-    // _strategy_wrapper(claiming_pair_plus(sudoku))
-#undef _strategy_wrapper
+    _strategy_wrapper(intersection_removal(sudoku))
 
     break;
   }

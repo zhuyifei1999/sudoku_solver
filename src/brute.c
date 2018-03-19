@@ -1,6 +1,6 @@
 #include "brute.h"
 
-bool _is_val_valid(val_t sudoku[9][9], pos_t position, val_t val) {
+static bool _is_val_valid(val_t sudoku[9][9], pos_t position, val_t val) {
   for_pos_cluster(c, cluster(position, vert_c), pos, ({
     if (sudoku[pos.i][pos.j] == val) return false;
   }))
@@ -14,7 +14,7 @@ bool _is_val_valid(val_t sudoku[9][9], pos_t position, val_t val) {
   return true;
 }
 
-bool _solve_sudoku(sudoku_arr sudoku, pos_t pos) {
+static bool _solve_sudoku(sudoku_arr sudoku, pos_t pos) {
   do {
     if (sudoku[pos.i][pos.j]) continue;
 
