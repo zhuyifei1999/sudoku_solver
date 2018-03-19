@@ -14,26 +14,27 @@ bool _is_val_valid(val_t sudoku[9][9], pos_t position, val_t val) {
   return true;
 }
 
-bool _solve_sudoku(sudoku_arr sudoku, int c) {
-  for (int a = c; a < 81; a++) {
-    pos_t pos = { .i = a / 9, .j = a % 9 };
+bool _solve_sudoku(sudoku_arr sudoku, pos_t pos) {
+  do {
     if (sudoku[pos.i][pos.j]) continue;
 
     // attempt every single value
-    val_t val;
-    for (val = 1; val <= 9; val++) {
+    for_val(val) {
       if (_is_val_valid(sudoku, pos, val)) {
         sudoku[pos.i][pos.j] = val;
-        if (_solve_sudoku(sudoku, a + 1)) return true;
+        pos_t nextpos = pos;
+        if (!(*all_c.next)(&nextpos)) return true; // reached the end
+        if (_solve_sudoku(sudoku, nextpos)) return true;
       }
     }
     // uh oh... no valid and successful value found
-    if (val > 9) sudoku[pos.i][pos.j] = 0;
+    sudoku[pos.i][pos.j] = 0;
     return false;
-  }
+  } while ((*all_c.next)(&pos));
   return true;
 }
 
 void solve_sudoku(sudoku_arr sudoku) {
-  _solve_sudoku(sudoku, 0);
+  pos_t position = zero_pos;
+  _solve_sudoku(sudoku, position);
 }

@@ -7,7 +7,7 @@
 
 typedef unsigned char val_t; // value 1-9, 0 is unknown / invalid
 
-#define printf_val "%u"
+#define printf_val "%hhu"
 
 typedef val_t sudoku_arr[9][9];
 
