@@ -93,17 +93,13 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
       sudoku->possibilities[pos.i][pos.j][9] = 0;
     }
   }))
+
   while (true) {
-    bool c = false;
-
-#define _strategy_wrapper(f) c |= f; if (c) continue;
-    _strategy_wrapper(naked_single(sudoku))
-    _strategy_wrapper(hidden_single(sudoku))
-    _strategy_wrapper(naked_candidates(sudoku))
-    _strategy_wrapper(intersection_removal(sudoku))
-    _strategy_wrapper(hidden_candidates(sudoku))
-
-    break;
+    bool (*strategy)(struct sudoku *);
+    for (size_t i = 0; (strategy = strategies[i]); i++) {
+      if ((*strategy)(sudoku)) break;
+    }
+    if (!strategy) break;
   }
 
   for_pos_cluster_zero(c, all_c, pos, ({
