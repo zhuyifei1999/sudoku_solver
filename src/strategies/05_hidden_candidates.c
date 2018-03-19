@@ -16,6 +16,7 @@ static void _poss_cb(poss_i_t n, val_t *poss_arr, void *state_ptr) {
 
   unsigned short num_intersect = 0;
 
+  // pass if # of possibility intersections = # of possibilities in poss_arr
   for_pos_cluster(c, state->cluster, pos, ({
     if (state->sudoku->arr[pos.i][pos.j]) continue;
     if (has_intersection_poss(state->sudoku->possibilities[pos.i][pos.j], poss_arr))
@@ -26,6 +27,7 @@ static void _poss_cb(poss_i_t n, val_t *poss_arr, void *state_ptr) {
 
   bool f = false;
 
+  // intersections cannot have any other possibilites other than poss_arr
   for_pos_cluster(c, state->cluster, pos, ({
     if (state->sudoku->arr[pos.i][pos.j]) continue;
     if (has_intersection_poss(state->sudoku->possibilities[pos.i][pos.j], poss_arr))
@@ -48,6 +50,7 @@ static void _poss_cb(poss_i_t n, val_t *poss_arr, void *state_ptr) {
 static bool _cluster(sudoku *sudoku, cluster_t cluster) {
   val_t poss_arr[10] = {0};
 
+  // get all possibilities in the cluster
   for_pos_cluster(c, cluster, pos, ({
     if (sudoku->arr[pos.i][pos.j]) continue;
     copy_poss(sudoku->possibilities[pos.i][pos.j], poss_arr);
