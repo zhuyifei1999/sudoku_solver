@@ -6,18 +6,18 @@
 #include <assert.h>
 #include <stdlib.h>
 
-bool decr_possible(sudoku *sudoku, pos_type position, val_type val) {
-  pos_single_type i = position.i, j = position.j;
+bool decr_possible(sudoku *sudoku, pos_t position, val_t val) {
+  pos_s_t i = position.i, j = position.j;
   // sanity checks: bounds
   assert(i >= 0 && i < 9);
   assert(j >= 0 && j < 9);
   assert(val > 0 && val <= 9);
 
-  val_type *poss = sudoku->possibilities[i][j];
+  val_t *poss = sudoku->possibilities[i][j];
 
-  // k = # of possibility left
-  int k, p = -1;
-  val_type v;
+  poss_i_t k; // # of possibility left
+  signed_poss_i_t p = -1; // position of concerned possibility
+  val_t v;
   for (k = 0; (v = poss[k]); k++) {
     if (v == val) p = k;
   }
@@ -34,12 +34,12 @@ bool decr_possible(sudoku *sudoku, pos_type position, val_type val) {
       sudoku->poststack[sudoku->poststacksize++] = position;
     }
 
-    debug_print("%d %d %d\n", i, j, val);
+    debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", i, j, val);
   }
   return p >= 0;
 }
 
-bool truncate_possible(sudoku *sudoku, pos_type position, val_type *poss_arr, bool intersect) {
+bool truncate_possible(sudoku *sudoku, pos_t position, val_t *poss_arr, bool intersect) {
   bool f = false;
   if (intersect) {
     for_val(val) {
@@ -47,7 +47,7 @@ bool truncate_possible(sudoku *sudoku, pos_type position, val_type *poss_arr, bo
       f |= decr_possible(sudoku, position, val);
     }
   } else {
-    val_type post, val;
+    val_t post, val;
     for (post = 0; (val = poss_arr[post]); post++) {
       f |= decr_possible(sudoku, position, val);
     }
@@ -55,8 +55,8 @@ bool truncate_possible(sudoku *sudoku, pos_type position, val_type *poss_arr, bo
   return f;
 }
 
-void place(sudoku *sudoku, pos_type position, val_type val) {
-  pos_single_type i = position.i, j = position.j;
+void place(sudoku *sudoku, pos_t position, val_t val) {
+  pos_s_t i = position.i, j = position.j;
   if (sudoku->arr[i][j] == val || !val) return;
   assert(!sudoku->arr[i][j]);
   sudoku->arr[i][j] = val;
@@ -79,14 +79,14 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
   for_pos_cluster_zero(c, all_c, pos, ({
     sudoku->arr[pos.i][pos.j] = 0;
     if (sudoku_arr[pos.i][pos.j]) {
-      sudoku->possibilities[pos.i][pos.j] = (val_type *)malloc(2*sizeof(val_type));
+      sudoku->possibilities[pos.i][pos.j] = (val_t *)malloc(2*sizeof(val_t));
       // only possibility
       sudoku->possibilities[pos.i][pos.j][0] = sudoku_arr[pos.i][pos.j];
       sudoku->possibilities[pos.i][pos.j][1] = 0;
       sudoku->poststack[sudoku->poststacksize++] = pos;
     } else {
       // all 9 possibilities
-      sudoku->possibilities[pos.i][pos.j] = (val_type *)malloc(10*sizeof(val_type));
+      sudoku->possibilities[pos.i][pos.j] = (val_t *)malloc(10*sizeof(val_t));
       for_val(k) {
         sudoku->possibilities[pos.i][pos.j][k-1] = k;
       }

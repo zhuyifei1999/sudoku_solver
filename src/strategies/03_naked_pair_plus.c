@@ -9,13 +9,13 @@ typedef struct _state {
   bool found;
 } _state;
 
-static void _cluster_cb(int n, pos_type *positions, void *state_ptr) {
+static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
   _state *state = (_state *)state_ptr;
-  val_type poss_arr[10] = {0};
+  val_t poss_arr[10] = {0};
 
   // find all posssibilities in the combinations
-  for (int i = 0; i < n; i++) {
-    pos_type pos = positions[i];
+  for (poss_i_t i = 0; i < n; i++) {
+    pos_t pos = positions[i];
     if (state->sudoku->arr[pos.i][pos.j]) return;
     copy_poss(state->sudoku->possibilities[pos.i][pos.j], poss_arr);
   }
@@ -28,7 +28,7 @@ static void _cluster_cb(int n, pos_type *positions, void *state_ptr) {
   // positions in the culster not part of the combination cannot have any
   // possibility the combination claimed
   for_pos_cluster(c, *state->cluster, pos, ({
-    int i;
+    poss_i_t i;
     for (i = 0; i < n; i++) {
       if (is_pos_equal(positions[i], pos)) break;
     }
@@ -36,8 +36,7 @@ static void _cluster_cb(int n, pos_type *positions, void *state_ptr) {
       f |= truncate_possible(state->sudoku, pos, poss_arr, false);
     }
   }))
-
-  if (f) debug_print("%s %d %d\n", state->cluster->gen->name,
+  if (f) debug_print("%s " printf_poss_i " (" printf_pos_s ", " printf_pos_s ")\n", state->cluster->gen->name, n,
     state->cluster->rel.i, state->cluster->rel.j);
 
   state->found |= f;
@@ -48,7 +47,7 @@ static bool _cluster_gen(sudoku *sudoku, cluster_gen gen) {
   for_pos_cluster(initc, *gen.complement, initpos, ({
     cluster c = cluster(initpos, gen);
     state.cluster = &c;
-    for (int n = 2; n <= 4; n++) {
+    for (poss_i_t n = 2; n <= 4; n++) {
       // select all combinations of 2-4 in the cluster
       combination_cluster(n, c, &_cluster_cb, &state);
     }

@@ -2,10 +2,10 @@
 
 #include <stddef.h>
 
-static void _p_vert_init(pos_type *target, pos_type src) {
+static void _p_vert_init(pos_t *target, pos_t src) {
   target->i = 0; target->j = src.j;
 }
-static bool _p_vert_next(pos_type *target) {
+static bool _p_vert_next(pos_t *target) {
   return ++target->i < 9;
 }
 static const struct cluster vert_ic = {
@@ -19,10 +19,10 @@ cluster_gen vert_c = {
   .name = "vert",
 };
 
-static void _p_horz_init(pos_type *target, const pos_type src) {
+static void _p_horz_init(pos_t *target, const pos_t src) {
   target->i = src.i; target->j = 0;
 }
-static bool _p_horz_next(pos_type *target) {
+static bool _p_horz_next(pos_t *target) {
   return ++target->j < 9;
 }
 static const struct cluster horz_ic = {
@@ -36,10 +36,10 @@ cluster_gen horz_c = {
   .name = "horz",
 };
 
-static void _p_cellgen_init(pos_type *target, const pos_type src) {
+static void _p_cellgen_init(pos_t *target, const pos_t src) {
   target->i = target->j = 0;
 }
-static bool _p_cellgen_next(pos_type *target) {
+static bool _p_cellgen_next(pos_t *target) {
   return (target->j += 3) % 9 ? 1 : (target->j -= 9, (target->i += 3) % 9);
 }
 static cluster_gen cellgen_c = {
@@ -48,10 +48,10 @@ static cluster_gen cellgen_c = {
   .complement = NULL,
   .name = NULL,
 };
-static void _p_cell_init(pos_type *target, const pos_type src) {
+static void _p_cell_init(pos_t *target, const pos_t src) {
   target->i = src.i / 3 * 3; target->j = src.j / 3 * 3;
 }
-static bool _p_cell_next(pos_type *target) {
+static bool _p_cell_next(pos_t *target) {
   return ++target->j % 3 ? 1 : (target->j -= 3, ++target->i % 3);
 }
 static struct cluster cell_ic = {
@@ -65,10 +65,10 @@ cluster_gen cell_c = {
   .name = "cell",
 };
 
-static void _p_all_init(pos_type *target, const pos_type src) {
+static void _p_all_init(pos_t *target, const pos_t src) {
   target->i = target->j = 0;
 }
-static bool _p_all_next(pos_type *target) {
+static bool _p_all_next(pos_t *target) {
   return ++target->j % 9 ? 1 : (target->j -= 9, ++target->i % 9);
 }
 cluster_gen all_c = {

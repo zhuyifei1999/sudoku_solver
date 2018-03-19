@@ -1,18 +1,22 @@
 #ifndef POSITION_H_
 #define POSITION_H_
 
-typedef int pos_single_type;
+#include <stddef.h>
 
-typedef struct pos_type {
-  pos_single_type i;
-  pos_single_type j;
-} pos_type;
+typedef size_t pos_s_t; // single index of position
+
+#define printf_pos_s "%zd"
+
+typedef struct pos_t {
+  pos_s_t i;
+  pos_s_t j;
+} pos_t;
 
 #define zero_pos { .i = 0, .j = 0 }
 
 typedef struct cluster_gen {
-  void (*init)(pos_type *target, const pos_type src);
-  bool (*next)(pos_type *target);
+  void (*init)(pos_t *target, const pos_t src);
+  bool (*next)(pos_t *target);
   const struct cluster *complement;
   const char *name;
 } cluster_gen;
@@ -20,7 +24,7 @@ typedef struct cluster_gen {
 extern cluster_gen vert_c, horz_c, cell_c, all_c;
 
 typedef struct cluster {
-  const pos_type rel;
+  const pos_t rel;
   const struct cluster_gen *gen;
 } cluster;
 
@@ -28,7 +32,7 @@ typedef struct cluster {
 
 #define for_pos_cluster(cluster_var, cluster_exp, position_var, body) { \
   cluster cluster_var = cluster_exp; \
-  pos_type position_var; \
+  pos_t position_var; \
   (*cluster_var.gen->init)(&position_var, cluster_var.rel); \
   do { \
     body; \
