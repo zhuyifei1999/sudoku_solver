@@ -6,8 +6,8 @@
 #include <assert.h>
 
 typedef struct _state {
-  struct sudoku *sudoku;
-  struct cluster_t cluster;
+  sudoku_t *sudoku;
+  cluster_t cluster;
   bool found;
 } _state;
 
@@ -47,7 +47,7 @@ static void _poss_cb(poss_i_t n, val_t *poss_arr, void *state_ptr) {
   state->found |= f;
 }
 
-static bool _cluster(sudoku *sudoku, cluster_t cluster) {
+static bool _cluster(sudoku_t *sudoku, cluster_t cluster) {
   val_t poss_arr[10] = {0};
 
   // get all possibilities in the cluster
@@ -71,7 +71,7 @@ static bool _cluster(sudoku *sudoku, cluster_t cluster) {
 }
 
 
-bool hidden_candidates(sudoku *sudoku) {
+bool hidden_candidates(sudoku_t *sudoku) {
   bool f = false;
 
   for_pos_cluster(initc, *horz_c.complement, initpos, ({

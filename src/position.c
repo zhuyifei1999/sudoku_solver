@@ -8,7 +8,7 @@ static void _p_vert_init(pos_t *target, pos_t src) {
 static bool _p_vert_next(pos_t *target) {
   return ++target->i < 9;
 }
-static const struct cluster_t vert_ic = {
+static const cluster_t vert_ic = {
   .rel = { .i = 0, .j = 0 },
   .gen = &horz_c,
 };
@@ -25,7 +25,7 @@ static void _p_horz_init(pos_t *target, const pos_t src) {
 static bool _p_horz_next(pos_t *target) {
   return ++target->j < 9;
 }
-static const struct cluster_t horz_ic = {
+static const cluster_t horz_ic = {
   .rel = zero_pos,
   .gen = &vert_c,
 };
@@ -54,7 +54,7 @@ static void _p_cell_init(pos_t *target, const pos_t src) {
 static bool _p_cell_next(pos_t *target) {
   return ++target->j % 3 ? 1 : (target->j -= 3, ++target->i % 3);
 }
-static struct cluster_t cell_ic = {
+static cluster_t cell_ic = {
   .rel = zero_pos,
   .gen = &cellgen_c,
 };

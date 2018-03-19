@@ -4,8 +4,8 @@
 #include "../combination.h"
 
 typedef struct _state {
-  struct sudoku *sudoku;
-  struct cluster_t *cluster;
+  sudoku_t *sudoku;
+  cluster_t *cluster;
   bool found;
 } _state;
 
@@ -44,7 +44,7 @@ static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
   state->found |= f;
 }
 
-static bool _cluster_gen(sudoku *sudoku, cluster_gen_t gen) {
+static bool _cluster_gen(sudoku_t *sudoku, cluster_gen_t gen) {
   _state state = { .sudoku = sudoku, .found = false };
   for_pos_cluster(initc, *gen.complement, initpos, ({
     cluster_t c = cluster(initpos, gen);
@@ -57,7 +57,7 @@ static bool _cluster_gen(sudoku *sudoku, cluster_gen_t gen) {
   return state.found;
 }
 
-bool naked_candidates(sudoku *sudoku) {
+bool naked_candidates(sudoku_t *sudoku) {
   bool f = false;
 
   f |= _cluster_gen(sudoku, horz_c);

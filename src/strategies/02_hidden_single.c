@@ -2,7 +2,7 @@
 #include "../debug.h"
 #include "../possibility.h"
 
-static bool _cluster(sudoku *sudoku, pos_t position, val_t val, cluster_gen_t gen) {
+static bool _cluster(sudoku_t *sudoku, pos_t position, val_t val, cluster_gen_t gen) {
   // true if position is the only polce that have a possibility of val in the cluster
   for_pos_cluster(c, cluster(position, gen), pos, ({
     if (is_pos_equal(position, pos)) continue;
@@ -13,13 +13,13 @@ static bool _cluster(sudoku *sudoku, pos_t position, val_t val, cluster_gen_t ge
   return true;
 }
 
-bool _is_hidden_single(sudoku *sudoku, pos_t position, val_t val) {
+bool _is_hidden_single(sudoku_t *sudoku, pos_t position, val_t val) {
   return _cluster(sudoku, position, val, vert_c) ||
     _cluster(sudoku, position, val, horz_c) ||
     _cluster(sudoku, position, val, cell_c);
 }
 
-bool hidden_single(sudoku *sudoku) {
+bool hidden_single(sudoku_t *sudoku) {
   bool f = false;
   for_val(val) {
     for_pos_cluster_zero(c, all_c, pos, ({

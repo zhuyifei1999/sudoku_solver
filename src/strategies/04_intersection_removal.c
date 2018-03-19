@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static bool _cluster(sudoku *sudoku, val_t val,
+static bool _cluster(sudoku_t *sudoku, val_t val,
   cluster_t cluster_pre, cluster_gen_t gen_rm
 ) {
   cluster_t *cluster_rm = NULL;
@@ -26,8 +26,8 @@ static bool _cluster(sudoku *sudoku, val_t val,
       } else {
         // Terrible hack :(
         cluster_t cluster_rm_init = cluster(pos, gen_rm);
-        cluster_rm = (struct cluster_t *)malloc(sizeof(struct cluster_t));
-        memcpy(cluster_rm, &cluster_rm_init, sizeof(struct cluster_t));
+        cluster_rm = (cluster_t *)malloc(sizeof(cluster_t));
+        memcpy(cluster_rm, &cluster_rm_init, sizeof(cluster_t));
       }
     }
   }))
@@ -58,7 +58,7 @@ static bool _cluster(sudoku *sudoku, val_t val,
   do_return(f);
 }
 
-static bool _cluster_gen(sudoku *sudoku, val_t val,
+static bool _cluster_gen(sudoku_t *sudoku, val_t val,
   cluster_gen_t gen_pre, cluster_gen_t gen_rm
 ) {
   bool f = false;
@@ -70,7 +70,7 @@ static bool _cluster_gen(sudoku *sudoku, val_t val,
   return f;
 }
 
-bool intersection_removal(sudoku *sudoku) {
+bool intersection_removal(sudoku_t *sudoku) {
   bool f = false;
   for_val(val) {
     // pointing pairs

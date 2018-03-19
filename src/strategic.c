@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-bool decr_possible(sudoku *sudoku, pos_t position, val_t val) {
+bool decr_possible(sudoku_t *sudoku, pos_t position, val_t val) {
   pos_s_t i = position.i, j = position.j;
   // sanity checks: bounds
   assert(i >= 0 && i < 9);
@@ -39,7 +39,7 @@ bool decr_possible(sudoku *sudoku, pos_t position, val_t val) {
   return p >= 0;
 }
 
-bool truncate_possible(sudoku *sudoku, pos_t position, val_t *poss_arr, bool intersect) {
+bool truncate_possible(sudoku_t *sudoku, pos_t position, val_t *poss_arr, bool intersect) {
   bool f = false;
   if (intersect) {
     for_val(val) {
@@ -55,7 +55,7 @@ bool truncate_possible(sudoku *sudoku, pos_t position, val_t *poss_arr, bool int
   return f;
 }
 
-void place(sudoku *sudoku, pos_t position, val_t val) {
+void place(sudoku_t *sudoku, pos_t position, val_t val) {
   pos_s_t i = position.i, j = position.j;
   if (sudoku->arr[i][j] == val || !val) return;
   assert(!sudoku->arr[i][j]);
@@ -74,7 +74,7 @@ void place(sudoku *sudoku, pos_t position, val_t val) {
 }
 
 void solve_sudoku(sudoku_arr sudoku_arr) {
-  sudoku *sudoku = (struct sudoku *)malloc(sizeof(struct sudoku));
+  sudoku_t *sudoku = (sudoku_t *)malloc(sizeof(sudoku_t));
   sudoku->poststacksize = 0;
   for_pos_cluster_zero(c, all_c, pos, ({
     sudoku->arr[pos.i][pos.j] = 0;
@@ -95,7 +95,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
   }))
 
   while (true) {
-    bool (*strategy)(struct sudoku *);
+    bool (*strategy)(sudoku_t *);
     for (size_t i = 0; (strategy = strategies[i]); i++) {
       if ((*strategy)(sudoku)) break;
     }
@@ -104,6 +104,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
 
   for_pos_cluster_zero(c, all_c, pos, ({
     sudoku_arr[pos.i][pos.j] = sudoku->arr[pos.i][pos.j];
+    free(sudoku->possibilities[pos.i][pos.j]);
   }))
   free(sudoku);
 }

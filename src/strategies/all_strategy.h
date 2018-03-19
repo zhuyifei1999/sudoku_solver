@@ -7,13 +7,13 @@
 // * https://www.youtube.com/watch?v=b123EURtu3I
 // * http://www.sudokuwiki.org/Strategy_Families
 
-bool naked_single(sudoku *sudoku);
-bool hidden_single(sudoku *sudoku);
-bool naked_candidates(sudoku *sudoku);
-bool intersection_removal(sudoku *sudoku);
-bool hidden_candidates(sudoku *sudoku);
+bool naked_single(sudoku_t *sudoku);
+bool hidden_single(sudoku_t *sudoku);
+bool naked_candidates(sudoku_t *sudoku);
+bool intersection_removal(sudoku_t *sudoku);
+bool hidden_candidates(sudoku_t *sudoku);
 
-bool (*strategies[])(sudoku *) = {
+bool (*strategies[])(sudoku_t *) = {
   &naked_single,
   &hidden_single,
   &naked_candidates,

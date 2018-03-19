@@ -1,7 +1,7 @@
 #include "../strategic.h"
 #include "../debug.h"
 
-bool naked_single(sudoku *sudoku) {
+bool naked_single(sudoku_t *sudoku) {
   if (!sudoku->poststacksize) return false;
   while (sudoku->poststacksize) {
     pos_t pos = sudoku->poststack[--sudoku->poststacksize];
