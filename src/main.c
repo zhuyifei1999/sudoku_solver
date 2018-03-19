@@ -3,10 +3,10 @@
 
 #include <stdio.h>
 
-void solve_sudoku(val_type sudoku[9][9]);
+void solve_sudoku(sudoku_arr sudoku);
 
 int main(int argc, char const *argv[]) {
-  val_type sudoku[9][9];
+  sudoku_arr sudoku;
   parse_sudoku(sudoku);
   // printf("INPUT:\n");
   // print_sudoku(sudoku);

@@ -2,52 +2,35 @@
 #include "../debug.h"
 #include "../possibility.h"
 
-bool _is_hidden_single(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
-  bool f;
-
-  f = false;
-  _for_place_vert(ai, aj, i, j) {
-    if (ai == i) continue;
-    if (is_val_possible(sudoku->possibilities[ai][aj], val)) {
-      f = true;
+static bool _cluster(sudoku *sudoku, pos_type position, val_type val, cluster_gen gen) {
+  for_pos_cluster(c, cluster(position, gen), pos, ({
+    if (_is_pos_equal(position, pos)) continue;
+    if (is_val_possible(sudoku->possibilities[pos.i][pos.j], val)) {
+      return false;
     }
-  }
-  if (!f) return true;
+  }))
+  return true;
+}
 
-  f = false;
-  _for_place_horz(ai, aj, i, j) {
-    if (aj == j) continue;
-    if (is_val_possible(sudoku->possibilities[ai][aj], val)) {
-      f = true;
-    }
-  }
-  if (!f) return true;
-
-  f = false;
-  _for_place_cell(ai, aj, i, j) {
-    if (ai == i && aj == j) continue;
-    if (is_val_possible(sudoku->possibilities[ai][aj], val)) {
-      f = true;
-    }
-  }
-  if (!f) return true;
-
-  return false;
+bool _is_hidden_single(sudoku *sudoku, pos_type position, val_type val) {
+  return _cluster(sudoku, position, val, vert_c) ||
+    _cluster(sudoku, position, val, horz_c) ||
+    _cluster(sudoku, position, val, cell_c);
 }
 
 bool hidden_single(sudoku *sudoku) {
-  bool c = false;
-  _for_val(val) {
-    _for_all_places(i, j) {
-      if (sudoku->arr[i][j]) continue;
-      if (!is_val_possible(sudoku->possibilities[i][j], val)) continue;
+  bool f = false;
+  for_val(val) {
+    for_pos_cluster_zero(c, all_c, pos, ({
+      if (sudoku->arr[pos.i][pos.j]) continue;
+      if (!is_val_possible(sudoku->possibilities[pos.i][pos.j], val)) continue;
 
-      if (!_is_hidden_single(sudoku, i, j, val)) continue;
+      if (!_is_hidden_single(sudoku, pos, val)) continue;
 
-      place(sudoku, i, j, val);
-      debug_print("%d %d %d\n", i, j, val);
-      c = true;
-    }
+      place(sudoku, pos, val);
+      debug_print("%d %d %d\n", pos.i, pos.j, val);
+      f = true;
+    }))
   }
-  return c;
+  return f;
 }

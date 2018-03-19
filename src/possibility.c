@@ -1,7 +1,7 @@
 #include "possibility.h"
 
 bool is_val_possible(val_type *possibilities, val_type possibility) {
-  pos_type post;
+  int post;
   val_type val;
   for (post = 0; (val = possibilities[post]); post++) {
     if (val == possibility) return true;
@@ -21,8 +21,8 @@ bool is_exact_same_poss(val_type *a, val_type *b) {
   return is_subset_poss(a, b) && is_subset_poss(b, a);
 }
 
-pos_type poss_size(val_type *possibilities) {
-  pos_type post;
+int poss_size(val_type *possibilities) {
+  int post;
   for (post = 0; possibilities[post]; post++) {}
   return post;
 }

@@ -3,6 +3,6 @@
 
 #include "sudoku.h"
 
-void solve_sudoku(val_type sudoku[9][9]);
+void solve_sudoku(sudoku_arr sudoku);
 
 #endif

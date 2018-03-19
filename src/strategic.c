@@ -5,7 +5,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
+bool decr_possible(sudoku *sudoku, pos_type position, val_type val) {
+  pos_single_type i = position.i, j = position.j;
   // sanity checks: bounds
   assert(i >= 0 && i < 9);
   assert(j >= 0 && j < 9);
@@ -14,7 +15,7 @@ bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
   val_type *poss = sudoku->possibilities[i][j];
 
   // k = # of possibility left
-  pos_type k, p = -1;
+  int k, p = -1;
   val_type v;
   for (k = 0; (v = poss[k]); k++) {
     if (v == val) p = k;
@@ -29,8 +30,7 @@ bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
 
     // push to stack for 'naked single' method
     if (k == 2) {
-      sudoku->poststack[sudoku->poststacksize++] = i;
-      sudoku->poststack[sudoku->poststacksize++] = j;
+      sudoku->poststack[sudoku->poststacksize++] = position;
     }
 
     debug_print("%d %d %d\n", i, j, val);
@@ -38,59 +38,60 @@ bool decr_possible(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
   return p >= 0;
 }
 
-void place(sudoku *sudoku, pos_type i, pos_type j, val_type val) {
+void place(sudoku *sudoku, pos_type position, val_type val) {
+  pos_single_type i = position.i, j = position.j;
   if (sudoku->arr[i][j] == val || !val) return;
   assert(!sudoku->arr[i][j]);
   sudoku->arr[i][j] = val;
   sudoku->possibilities[i][j][0] = 0;
 
-  _for_place_vert(ai, aj, i, j) {
-    decr_possible(sudoku, ai, aj, val);
-  }
-  _for_place_horz(ai, aj, i, j) {
-    decr_possible(sudoku, ai, aj, val);
-  }
-  _for_place_cell(ai, aj, i, j) {
-    decr_possible(sudoku, ai, aj, val);
-  }
+  for_pos_cluster(c, cluster(position, vert_c), pos, ({
+    decr_possible(sudoku, pos, val);
+  }))
+  for_pos_cluster(c, cluster(position, horz_c), pos, ({
+    decr_possible(sudoku, pos, val);
+  }))
+  for_pos_cluster(c, cluster(position, cell_c), pos, ({
+    decr_possible(sudoku, pos, val);
+  }))
 }
 
-void solve_sudoku(val_type sudoku_arr[9][9]) {
+void solve_sudoku(sudoku_arr sudoku_arr) {
   sudoku *sudoku = (struct sudoku *)malloc(sizeof(struct sudoku));
   sudoku->poststacksize = 0;
-  _for_all_places(i, j) {
-    sudoku->arr[i][j] = 0;
-    if (sudoku_arr[i][j]) {
-      sudoku->possibilities[i][j] = (val_type *)malloc(2*sizeof(val_type));
+  for_pos_cluster_zero(c, all_c, pos, ({
+    sudoku->arr[pos.i][pos.j] = 0;
+    if (sudoku_arr[pos.i][pos.j]) {
+      sudoku->possibilities[pos.i][pos.j] = (val_type *)malloc(2*sizeof(val_type));
       // only possibility
-      sudoku->possibilities[i][j][0] = sudoku_arr[i][j];
-      sudoku->possibilities[i][j][1] = 0;
-      sudoku->poststack[sudoku->poststacksize++] = i;
-      sudoku->poststack[sudoku->poststacksize++] = j;
+      sudoku->possibilities[pos.i][pos.j][0] = sudoku_arr[pos.i][pos.j];
+      sudoku->possibilities[pos.i][pos.j][1] = 0;
+      sudoku->poststack[sudoku->poststacksize++] = pos;
     } else {
       // all 9 possibilities
-      sudoku->possibilities[i][j] = (val_type *)malloc(10*sizeof(val_type));
-      _for_val(k) {
-        sudoku->possibilities[i][j][k-1] = k;
+      sudoku->possibilities[pos.i][pos.j] = (val_type *)malloc(10*sizeof(val_type));
+      for_val(k) {
+        sudoku->possibilities[pos.i][pos.j][k-1] = k;
       }
-      sudoku->possibilities[i][j][9] = 0;
+      sudoku->possibilities[pos.i][pos.j][9] = 0;
     }
-  }
+  }))
   while (true) {
     bool c = false;
 
 #define _strategy_wrapper(f) c |= f; if (c) continue;
     _strategy_wrapper(naked_single(sudoku))
     _strategy_wrapper(hidden_single(sudoku))
-    _strategy_wrapper(naked_pair_plus(sudoku))
-    _strategy_wrapper(pointing_pair_plus(sudoku))
-    _strategy_wrapper(claiming_pair_plus(sudoku))
+    // _strategy_wrapper(naked_pair_plus(sudoku))
+    // _strategy_wrapper(pointing_pair_plus(sudoku))
+    // _strategy_wrapper(claiming_pair_plus(sudoku))
 #undef _strategy_wrapper
 
     break;
   }
 
-  _for_all_places(i, j) {
-    sudoku_arr[i][j] = sudoku->arr[i][j];
-  }
+  for_pos_cluster_zero(c, all_c, pos, ({
+    sudoku_arr[pos.i][pos.j] = sudoku->arr[pos.i][pos.j];
+  }))
+  free(sudoku);
 }
