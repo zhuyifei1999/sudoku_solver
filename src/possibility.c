@@ -21,6 +21,14 @@ bool is_exact_same_poss(val_t *a, val_t *b) {
   return is_subset_poss(a, b) && is_subset_poss(b, a);
 }
 
+bool has_intersection_poss(val_t *a, val_t *b) {
+  val_t post, val;
+  for (post = 0; (val = a[post]); post++) {
+    if (is_val_possible(b, val)) return true;
+  }
+  return false;
+}
+
 poss_i_t poss_size(val_t *possibilities) {
   poss_i_t post;
   for (post = 0; possibilities[post]; post++) {}

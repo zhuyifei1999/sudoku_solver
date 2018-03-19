@@ -2,7 +2,7 @@
 #include "../debug.h"
 #include "../possibility.h"
 
-static bool _cluster(sudoku *sudoku, pos_t position, val_t val, cluster_gen gen) {
+static bool _cluster(sudoku *sudoku, pos_t position, val_t val, cluster_gen_t gen) {
   // true if position is the only polce that have a possibility of val in the cluster
   for_pos_cluster(c, cluster(position, gen), pos, ({
     if (is_pos_equal(position, pos)) continue;

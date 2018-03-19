@@ -9,6 +9,6 @@ bool naked_single(sudoku *sudoku);
 bool hidden_single(sudoku *sudoku);
 bool naked_pair_plus(sudoku *sudoku);
 bool intersection_removal(sudoku *sudoku);
-// bool claiming_pair_plus(sudoku *sudoku);
+bool hidden_pair_plus(sudoku *sudoku);
 
 #endif

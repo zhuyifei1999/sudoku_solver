@@ -7,9 +7,9 @@
 #include <string.h>
 
 static bool _cluster(sudoku *sudoku, val_t val,
-  cluster cluster_pre, cluster_gen gen_rm
+  cluster_t cluster_pre, cluster_gen_t gen_rm
 ) {
-  cluster *cluster_rm = NULL;
+  cluster_t *cluster_rm = NULL;
   unsigned short num_found = 0;
 
 #define do_return(value) do { if (cluster_rm) free(cluster_rm); return value; } while (0)
@@ -25,9 +25,9 @@ static bool _cluster(sudoku *sudoku, val_t val,
         if (!is_pos_cluster(pos, *cluster_rm)) do_return(false);
       } else {
         // Terrible hack :(
-        cluster cluster_rm_init = cluster(pos, gen_rm);
-        cluster_rm = (struct cluster *)malloc(sizeof(struct cluster));
-        memcpy(cluster_rm, &cluster_rm_init, sizeof(struct cluster));
+        cluster_t cluster_rm_init = cluster(pos, gen_rm);
+        cluster_rm = (struct cluster_t *)malloc(sizeof(struct cluster_t));
+        memcpy(cluster_rm, &cluster_rm_init, sizeof(struct cluster_t));
       }
     }
   }))
@@ -59,7 +59,7 @@ static bool _cluster(sudoku *sudoku, val_t val,
 }
 
 static bool _cluster_gen(sudoku *sudoku, val_t val,
-  cluster_gen gen_pre, cluster_gen gen_rm
+  cluster_gen_t gen_pre, cluster_gen_t gen_rm
 ) {
   bool f = false;
 
