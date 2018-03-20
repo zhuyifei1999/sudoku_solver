@@ -1,7 +1,7 @@
 #ifndef STACK_H_
 #define STACK_H_
 
-#define struct_stack(type, name, size) type name##_stack[9*9]; size_t name##_stacksize;
+#define struct_stack(type, name, size) type name##_stack[size]; size_t name##_stacksize;
 
 #define stack_init(name) name##_stacksize = 0
 #define stack_size(name) name##_stacksize

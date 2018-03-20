@@ -6,6 +6,35 @@
 #include <assert.h>
 #include <stdlib.h>
 
+static void _decr_possible_commit(sudoku_t *sudoku) {
+  while (stack_size(sudoku->decr_poss)) {
+    pos_val_t item = stack_pop(sudoku->decr_poss);
+    pos_s_t i = item.pos.i, j = item.pos.j;
+    val_t val = item.val;
+
+    val_t *poss = sudoku->possibilities[i][j];
+    poss_i_t k; // # of possibility left
+    signed_poss_i_t p = -1; // position of concerned possibility
+    val_t v;
+    for (k = 0; (v = poss[k]); k++) {
+      if (v == val) p = k;
+    }
+
+    // sanity check: either it is filled or has at least one possibility
+    assert(sudoku->arr[i][j] || k > 0);
+    if (p >= 0) {
+      // get rid of the found item
+      poss[p] = poss[k-1];
+      poss[k-1] = 0;
+
+      // push to stack for 'naked single' method
+      if (k == 2) {
+        stack_push(sudoku->ns_pos, item.pos);
+      }
+    }
+  }
+}
+
 bool decr_possible(sudoku_t *sudoku, pos_t position, val_t val) {
   pos_s_t i = position.i, j = position.j;
   // sanity checks: bounds
@@ -15,28 +44,15 @@ bool decr_possible(sudoku_t *sudoku, pos_t position, val_t val) {
 
   val_t *poss = sudoku->possibilities[i][j];
 
-  poss_i_t k; // # of possibility left
-  signed_poss_i_t p = -1; // position of concerned possibility
-  val_t v;
-  for (k = 0; (v = poss[k]); k++) {
-    if (v == val) p = k;
-  }
+  if (sudoku->arr[i][j]) return false;
+  if (!is_val_possible(poss, val)) return false;
 
-  // sanity check: either it is filled or has at least one possibility
-  assert(sudoku->arr[i][j] || k > 0);
-  if (p >= 0) {
-    // get rid of the found item
-    poss[p] = poss[k-1];
-    poss[k-1] = 0;
+  // sanity check: it has at least one possibility left after removal
+  assert(poss_size(poss) > 1);
 
-    // push to stack for 'naked single' method
-    if (k == 2) {
-      stack_push(sudoku->ns_pos, position);
-    }
-
-    debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", i, j, val);
-  }
-  return p >= 0;
+  stack_push(sudoku->decr_poss, ((pos_val_t){ .pos = position, .val = val }));
+  debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", i, j, val);
+  return true;
 }
 
 bool truncate_possible(sudoku_t *sudoku, pos_t position, val_t *poss_arr, bool intersect) {
@@ -60,7 +76,8 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
   if (sudoku->arr[i][j] == val || !val) return;
   assert(!sudoku->arr[i][j]);
   sudoku->arr[i][j] = val;
-  sudoku->possibilities[i][j][0] = 0;
+  sudoku->possibilities[i][j][0] = val;
+  sudoku->possibilities[i][j][1] = 0;
 
   for_pos_cluster(c, cluster(position, vert_c), pos, ({
     decr_possible(sudoku, pos, val);
@@ -76,6 +93,7 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
 void solve_sudoku(sudoku_arr sudoku_arr) {
   sudoku_t *sudoku = malloc(sizeof(sudoku_t));
   stack_init(sudoku->ns_pos);
+  stack_init(sudoku->decr_poss);
   for_pos_cluster_zero(c, all_c, pos, ({
     sudoku->arr[pos.i][pos.j] = 0;
     if (sudoku_arr[pos.i][pos.j]) {
@@ -100,6 +118,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
       if ((*strategy)(sudoku)) break;
     }
     if (!strategy) break;
+    if (stack_size(sudoku->decr_poss)) _decr_possible_commit(sudoku);
   }
 
   for_pos_cluster_zero(c, all_c, pos, ({
