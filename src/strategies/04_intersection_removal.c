@@ -26,7 +26,7 @@ static bool _cluster(sudoku_t *sudoku, val_t val,
       } else {
         // Terrible hack :(
         cluster_t cluster_rm_init = cluster(pos, gen_rm);
-        cluster_rm = (cluster_t *)malloc(sizeof(cluster_t));
+        cluster_rm = malloc(sizeof(cluster_t));
         memcpy(cluster_rm, &cluster_rm_init, sizeof(cluster_t));
       }
     }

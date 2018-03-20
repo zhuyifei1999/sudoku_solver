@@ -10,7 +10,7 @@ typedef struct _state {
 } _state;
 
 static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
-  _state *state = (_state *)state_ptr;
+  _state *state = state_ptr;
   val_t poss_arr[10] = {0};
 
   // find all posssibilities in the combinations

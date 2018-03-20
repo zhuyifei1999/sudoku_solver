@@ -74,19 +74,19 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
 }
 
 void solve_sudoku(sudoku_arr sudoku_arr) {
-  sudoku_t *sudoku = (sudoku_t *)malloc(sizeof(sudoku_t));
+  sudoku_t *sudoku = malloc(sizeof(sudoku_t));
   stack_init(sudoku->ns_pos);
   for_pos_cluster_zero(c, all_c, pos, ({
     sudoku->arr[pos.i][pos.j] = 0;
     if (sudoku_arr[pos.i][pos.j]) {
-      sudoku->possibilities[pos.i][pos.j] = (val_t *)malloc(2*sizeof(val_t));
+      sudoku->possibilities[pos.i][pos.j] = malloc(2*sizeof(val_t));
       // only possibility
       sudoku->possibilities[pos.i][pos.j][0] = sudoku_arr[pos.i][pos.j];
       sudoku->possibilities[pos.i][pos.j][1] = 0;
       stack_push(sudoku->ns_pos, pos);
     } else {
       // all 9 possibilities
-      sudoku->possibilities[pos.i][pos.j] = (val_t *)malloc(10*sizeof(val_t));
+      sudoku->possibilities[pos.i][pos.j] = malloc(10*sizeof(val_t));
       for_val(k) {
         sudoku->possibilities[pos.i][pos.j][k-1] = k;
       }

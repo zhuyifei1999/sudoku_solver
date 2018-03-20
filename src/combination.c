@@ -16,7 +16,7 @@ static void _combination_possibility(poss_i_t n, poss_i_t i, val_t *target, poss
 }
 
 void combination_possibility(poss_i_t n, val_t *possibility_arr, void (*fn)(poss_i_t, val_t *, void *), void *arg) {
-  val_t *target = (val_t *)malloc((n+1)*sizeof(val_t));
+  val_t *target = malloc((n+1)*sizeof(val_t));
   _combination_possibility(n, 0, target, 0, possibility_arr, fn, arg);
   free(target);
 }
@@ -38,7 +38,7 @@ static void _combination_cluster(poss_i_t n, poss_i_t i, pos_t *target, pos_t cu
 }
 
 void combination_cluster(poss_i_t n, cluster_t cluster_spec, void (*fn)(poss_i_t, pos_t *, void *), void *arg) {
-  pos_t *target = (pos_t *)malloc((n+1)*sizeof(pos_t));
+  pos_t *target = malloc((n+1)*sizeof(pos_t));
   pos_t current;
   _combination_cluster(n, 0, target, current, cluster_spec, fn, arg);
   free(target);

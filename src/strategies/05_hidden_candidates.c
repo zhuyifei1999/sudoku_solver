@@ -12,7 +12,7 @@ typedef struct _state {
 } _state;
 
 static void _poss_cb(poss_i_t n, val_t *poss_arr, void *state_ptr) {
-  _state *state = (_state *)state_ptr;
+  _state *state = state_ptr;
 
   unsigned short num_intersect = 0;
 
