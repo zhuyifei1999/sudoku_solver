@@ -44,5 +44,6 @@ typedef struct cluster_t {
 
 #define is_pos_equal(x, y) (x.i == y.i && x.j == y.j)
 bool is_pos_cluster(pos_t pos, cluster_t cluster);
+bool is_cluster_equal(cluster_t x, cluster_t y);
 
 #endif

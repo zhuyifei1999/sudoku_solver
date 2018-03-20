@@ -5,9 +5,9 @@
 
 #include "position.h"
 
-typedef unsigned char val_t; // value 1-9, 0 is unknown / invalid
+typedef unsigned short val_t; // value 1-9, 0 is unknown / invalid
 
-#define printf_val "%hhu"
+#define printf_val "%hu"
 
 typedef val_t sudoku_arr[9][9];
 

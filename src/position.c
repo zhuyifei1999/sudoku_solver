@@ -84,3 +84,11 @@ bool is_pos_cluster(pos_t pos, cluster_t cluster) {
   (*cluster.gen->init)(&pos2, cluster.rel);
   return is_pos_equal(pos1, pos2);
 }
+
+bool is_cluster_equal(cluster_t x, cluster_t y) {
+  if (x.gen != y.gen) return false;
+  pos_t pos1, pos2;
+  (*x.gen->init)(&pos1, x.rel);
+  (*y.gen->init)(&pos2, y.rel);
+  return is_pos_equal(pos1, pos2);
+}

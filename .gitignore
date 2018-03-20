@@ -67,3 +67,7 @@ Makefile.in
 /src/sudoku_strategic
 /src/sudoku_brute
 core
+
+# make CFLAGS='-save-temps=obj'
+*.s
+*.i
