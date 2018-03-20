@@ -15,7 +15,7 @@ static bool _cluster(sudoku_t *sudoku, val_t val,
 #define do_return(value) do { if (cluster_rm) free(cluster_rm); return value; } while (0)
 
   // The value should only belong to one cluster of gen_rm
-  for_pos_cluster(c, cluster_pre, pos, ({
+  for_pos_cluster(cluster_pre, pos, ({
     if (sudoku->arr[pos.i][pos.j] == val) do_return(false);
 
     num_found++;
@@ -39,7 +39,7 @@ static bool _cluster(sudoku_t *sudoku, val_t val,
 
   bool f = false;
   // any other clusters of gen_pre in cluster_rm cannot have the value
-  for_pos_cluster(c, *cluster_rm, pos, ({
+  for_pos_cluster(*cluster_rm, pos, ({
     if (is_pos_cluster(pos, cluster_pre)) continue;
     f |= decr_possible(sudoku, pos, val);
   }))
@@ -63,7 +63,7 @@ static bool _cluster_gen(sudoku_t *sudoku, val_t val,
 ) {
   bool f = false;
 
-  for_pos_cluster(initc, *gen_pre.complement, initpos, ({
+  for_pos_cluster(*gen_pre.complement, initpos, ({
     f |= _cluster(sudoku, val, cluster(initpos, gen_pre), gen_rm);
   }))
 

@@ -4,7 +4,7 @@
 
 static bool _cluster(sudoku_t *sudoku, pos_t position, val_t val, cluster_gen_t gen) {
   // true if position is the only polce that have a possibility of val in the cluster
-  for_pos_cluster(c, cluster(position, gen), pos, ({
+  for_pos_cluster(cluster(position, gen), pos, ({
     if (is_pos_equal(position, pos)) continue;
     if (is_val_possible(sudoku->possibilities[pos.i][pos.j], val)) {
       return false;
@@ -22,7 +22,7 @@ bool _is_hidden_single(sudoku_t *sudoku, pos_t position, val_t val) {
 bool hidden_single(sudoku_t *sudoku) {
   bool f = false;
   for_val(val) {
-    for_pos_cluster_zero(c, all_c, pos, ({
+    for_pos_cluster_zero(all_c, pos, ({
       if (sudoku->arr[pos.i][pos.j]) continue;
       if (!is_val_possible(sudoku->possibilities[pos.i][pos.j], val)) continue;
 

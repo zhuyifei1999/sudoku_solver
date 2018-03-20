@@ -27,7 +27,7 @@ static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
 
   // positions in the cluster not part of the combination cannot have any
   // possibility the combination claimed
-  for_pos_cluster(c, *state->cluster, pos, ({
+  for_pos_cluster(*state->cluster, pos, ({
     poss_i_t i;
     for (i = 0; i < n; i++) {
       if (is_pos_equal(positions[i], pos)) break;
@@ -46,7 +46,7 @@ static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
 
 static bool _cluster_gen(sudoku_t *sudoku, cluster_gen_t gen) {
   _state state = { .sudoku = sudoku, .found = false };
-  for_pos_cluster(initc, *gen.complement, initpos, ({
+  for_pos_cluster(*gen.complement, initpos, ({
     cluster_t c = cluster(initpos, gen);
     state.cluster = &c;
     for (poss_i_t n = 2; n <= 4; n++) {

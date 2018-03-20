@@ -18,7 +18,7 @@ typedef struct _state {
 static bool _is_pair(_state *state, cluster_t cluster_pre,
   cluster_t **cluster_rm_1, cluster_t **cluster_rm_2
 ) {
-  for_pos_cluster(c, cluster_pre, pos, ({
+  for_pos_cluster(cluster_pre, pos, ({
     if (state->sudoku->arr[pos.i][pos.j] == state->val) return false;
 
     if (is_val_possible(state->sudoku->possibilities[pos.i][pos.j], state->val)) {
@@ -78,12 +78,12 @@ static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
 
   bool f = false;
   // positions in the cluster_rm's not part of the cluster_pre's cannot have val
-  for_pos_cluster(c, *cluster_rm_a_1, pos, ({
+  for_pos_cluster(*cluster_rm_a_1, pos, ({
     if (is_pos_cluster(pos, cluster_pre_a) || is_pos_cluster(pos, cluster_pre_b))
       continue;
     f |= decr_possible(state->sudoku, pos, state->val);
   }))
-  for_pos_cluster(c, *cluster_rm_a_2, pos, ({
+  for_pos_cluster(*cluster_rm_a_2, pos, ({
     if (is_pos_cluster(pos, cluster_pre_a) || is_pos_cluster(pos, cluster_pre_b))
       continue;
     f |= decr_possible(state->sudoku, pos, state->val);

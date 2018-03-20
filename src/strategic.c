@@ -79,13 +79,13 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
   sudoku->possibilities[i][j][0] = val;
   sudoku->possibilities[i][j][1] = 0;
 
-  for_pos_cluster(c, cluster(position, vert_c), pos, ({
+  for_pos_cluster(cluster(position, vert_c), pos, ({
     decr_possible(sudoku, pos, val);
   }))
-  for_pos_cluster(c, cluster(position, horz_c), pos, ({
+  for_pos_cluster(cluster(position, horz_c), pos, ({
     decr_possible(sudoku, pos, val);
   }))
-  for_pos_cluster(c, cluster(position, cell_c), pos, ({
+  for_pos_cluster(cluster(position, cell_c), pos, ({
     decr_possible(sudoku, pos, val);
   }))
 }
@@ -94,7 +94,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
   sudoku_t *sudoku = malloc(sizeof(sudoku_t));
   stack_init(sudoku->ns_pos);
   stack_init(sudoku->decr_poss);
-  for_pos_cluster_zero(c, all_c, pos, ({
+  for_pos_cluster_zero(all_c, pos, ({
     sudoku->arr[pos.i][pos.j] = 0;
     if (sudoku_arr[pos.i][pos.j]) {
       sudoku->possibilities[pos.i][pos.j] = malloc(2*sizeof(val_t));
@@ -121,7 +121,7 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
     if (stack_size(sudoku->decr_poss)) _decr_possible_commit(sudoku);
   }
 
-  for_pos_cluster_zero(c, all_c, pos, ({
+  for_pos_cluster_zero(all_c, pos, ({
     sudoku_arr[pos.i][pos.j] = sudoku->arr[pos.i][pos.j];
     free(sudoku->possibilities[pos.i][pos.j]);
   }))

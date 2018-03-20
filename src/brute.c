@@ -1,13 +1,13 @@
 #include "brute.h"
 
 static bool _is_val_valid(val_t sudoku[9][9], pos_t position, val_t val) {
-  for_pos_cluster(c, cluster(position, vert_c), pos, ({
+  for_pos_cluster(cluster(position, vert_c), pos, ({
     if (sudoku[pos.i][pos.j] == val) return false;
   }))
-  for_pos_cluster(c, cluster(position, horz_c), pos, ({
+  for_pos_cluster(cluster(position, horz_c), pos, ({
     if (sudoku[pos.i][pos.j] == val) return false;
   }))
-  for_pos_cluster(c, cluster(position, cell_c), pos, ({
+  for_pos_cluster(cluster(position, cell_c), pos, ({
     if (sudoku[pos.i][pos.j] == val) return false;
   }))
 
