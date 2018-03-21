@@ -6,6 +6,7 @@
 typedef size_t pos_s_t; // single index of position
 
 #define printf_pos_s "%zd"
+#define printf_pos "(" printf_pos_s ", " printf_pos_s ")"
 
 typedef struct pos_t {
   pos_s_t i;

@@ -6,7 +6,6 @@
 typedef struct _state {
   sudoku_t *sudoku;
   cluster_t *cluster;
-  bool found;
 } _state;
 
 static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
@@ -36,16 +35,14 @@ static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
       f |= truncate_possible(state->sudoku, pos, poss_arr, false);
     }
   }))
-  if (f) debug_print("%s " printf_poss_i " (" printf_pos_s ", " printf_pos_s ")\n",
+  if (f) debug_print("%s " printf_poss_i " " printf_pos,
     state->cluster->gen->name, n,
     state->cluster->rel.i, state->cluster->rel.j
   );
-
-  state->found |= f;
 }
 
-static bool _cluster_gen(sudoku_t *sudoku, cluster_gen_t gen) {
-  _state state = { .sudoku = sudoku, .found = false };
+static void _cluster_gen(sudoku_t *sudoku, cluster_gen_t gen) {
+  _state state = { .sudoku = sudoku };
   for_pos_cluster(*gen.complement, initpos, ({
     cluster_t c = cluster(initpos, gen);
     state.cluster = &c;
@@ -54,15 +51,12 @@ static bool _cluster_gen(sudoku_t *sudoku, cluster_gen_t gen) {
       combination_cluster(n, c, &_cluster_cb, &state);
     }
   }))
-  return state.found;
 }
 
 bool naked_candidates(sudoku_t *sudoku) {
-  bool f = false;
+  _cluster_gen(sudoku, horz_c);
+  _cluster_gen(sudoku, vert_c);
+  _cluster_gen(sudoku, cell_c);
 
-  f |= _cluster_gen(sudoku, horz_c);
-  f |= _cluster_gen(sudoku, vert_c);
-  f |= _cluster_gen(sudoku, cell_c);
-
-  return f;
+  return stack_size(sudoku->decr_poss);
 }

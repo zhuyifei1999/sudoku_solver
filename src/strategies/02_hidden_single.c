@@ -29,7 +29,7 @@ bool hidden_single(sudoku_t *sudoku) {
       if (!_is_hidden_single(sudoku, pos, val)) continue;
 
       place(sudoku, pos, val);
-      debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", pos.i, pos.j, val);
+      debug_print(printf_pos " " printf_val, pos.i, pos.j, val);
       f = true;
     }))
   }

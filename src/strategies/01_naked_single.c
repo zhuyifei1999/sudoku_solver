@@ -7,7 +7,7 @@ bool naked_single(sudoku_t *sudoku) {
     pos_t pos = stack_pop(sudoku->ns_pos);
     val_t val = sudoku->possibilities[pos.i][pos.j][0];
     place(sudoku, pos, val);
-    debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", pos.i, pos.j, val);
+    debug_print(printf_pos " " printf_val, pos.i, pos.j, val);
   }
   return true;
 }

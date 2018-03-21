@@ -7,3 +7,4 @@ sudoku_strategic_SOURCES += strategies/03_naked_candidates.c
 sudoku_strategic_SOURCES += strategies/04_intersection_removal.c
 sudoku_strategic_SOURCES += strategies/05_hidden_candidates.c
 sudoku_strategic_SOURCES += strategies/06_x_wing.c
+sudoku_strategic_SOURCES += strategies/07_singles_chains.c

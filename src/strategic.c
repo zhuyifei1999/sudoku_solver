@@ -50,8 +50,8 @@ bool decr_possible(sudoku_t *sudoku, pos_t position, val_t val) {
   // sanity check: it has at least one possibility left after removal
   assert(poss_size(poss) > 1);
 
-  stack_push(sudoku->decr_poss, ((pos_val_t){ .pos = position, .val = val }));
-  debug_print("(" printf_pos_s ", " printf_pos_s ") " printf_val "\n", i, j, val);
+  stack_push_check(sudoku->decr_poss, ((pos_val_t){ .pos = position, .val = val }));
+  debug_print(printf_pos " " printf_val, i, j, val);
   return true;
 }
 
@@ -118,7 +118,13 @@ void solve_sudoku(sudoku_arr sudoku_arr) {
       if ((*strategy)(sudoku)) break;
     }
     if (!strategy) break;
+
+    size_t decr_poss_size = stack_size(sudoku->decr_poss);
     if (stack_size(sudoku->decr_poss)) _decr_possible_commit(sudoku);
+    size_t ns_pos_size = stack_size(sudoku->ns_pos);
+
+    debug_print("stack sizes: ns_pos:%zd; decr_poss:%zd",
+      ns_pos_size, decr_poss_size);
   }
 
   for_pos_cluster_zero(all_c, pos, ({
