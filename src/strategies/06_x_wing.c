@@ -117,7 +117,7 @@ bool x_wing(sudoku_t *sudoku) {
     // pointing pairs
     _cluster_gen(sudoku, val, cell_c, horz_c);
     _cluster_gen(sudoku, val, cell_c, vert_c);
-    // // claiming pairs
+    // claiming pairs
     _cluster_gen(sudoku, val, horz_c, cell_c);
     _cluster_gen(sudoku, val, vert_c, cell_c);
     */

@@ -70,6 +70,14 @@ static bool _cluster_color_see(_state *state, pos_t position,
     color_t that = state->tbl[pos.i][pos.j];
     unsigned short *seen_color = seen + that.id;
 
+    // see own color check
+    if (that.id == this.id && that.color == this.color) {
+      stack_push_check(state->collisions, this);
+      debug_print(printf_pos ": " printf_val " its own color of id %hd",
+        position.i, position.j, state->val, that.id);
+      return true;
+    }
+
     // see both colors check
     if (*seen_color & 2) {
       if ((*seen_color & 1) == that.color) continue;
@@ -81,13 +89,6 @@ static bool _cluster_color_see(_state *state, pos_t position,
       *seen_color = 2 + that.color;
     }
 
-    // see own color check
-    if (that.id == this.id && that.color == this.color) {
-      stack_push_check(state->collisions, this);
-      debug_print(printf_pos ": " printf_val " its own color of id %hd",
-        position.i, position.j, state->val, that.id);
-      return true;
-    }
   }))
   return false;
 }

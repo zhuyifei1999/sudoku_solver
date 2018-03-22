@@ -14,6 +14,7 @@ bool intersection_removal(sudoku_t *sudoku);
 bool hidden_candidates(sudoku_t *sudoku);
 bool x_wing(sudoku_t *sudoku);
 bool singles_chains(sudoku_t *sudoku);
+bool y_wing(sudoku_t *sudoku);
 
 bool (*strategies[])(sudoku_t *) = {
   &naked_single,
@@ -23,6 +24,7 @@ bool (*strategies[])(sudoku_t *) = {
   &hidden_candidates,
   &x_wing,
   &singles_chains,
+  &y_wing,
   NULL
 };
 
