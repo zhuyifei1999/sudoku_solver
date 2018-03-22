@@ -12,10 +12,10 @@
   fprintf(stderr, "%s:%d: " fmt "\n", __FILENAME__, \
           __LINE__, __VA_ARGS__); \
 } while (0)
-#define debug_print_arr(buffer_main_size, buffer_temp_size, fmt, typ, arr) do { \
+#define debug_print_arr(buffer_main_size, buffer_temp_size, fmt, arr) do { \
   char buffer_main[(buffer_main_size)+1] = {0}; \
   char buffer_temp[(buffer_temp_size)+1] = {0}; \
-  typ val; \
+  typeof(arr[0]) val; \
   for (int i = 0; (val = arr[i]); i++) { \
     if (i) strncat(buffer_main, ", ", buffer_main_size); \
     snprintf(buffer_temp, buffer_temp_size, fmt, val); \

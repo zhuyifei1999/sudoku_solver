@@ -39,7 +39,7 @@ static void _poss_cb(poss_i_t n, val_t *poss_arr, void *state_ptr) {
       state->cluster.gen->name, n,
       state->cluster.rel.i, state->cluster.rel.j
     );
-    debug_print_arr(100, 10, printf_val, val_t, poss_arr);
+    debug_print_arr(100, 10, printf_val, poss_arr);
   }
 }
 
@@ -52,7 +52,7 @@ static void _cluster(sudoku_t *sudoku, cluster_t cluster) {
     copy_poss(sudoku->possibilities[pos.i][pos.j], poss_arr);
   }))
 
-  // debug_print_arr(100, 10, printf_val, val_t, poss_arr);
+  // debug_print_arr(100, 10, printf_val, poss_arr);
 
   _state state = { .sudoku = sudoku, .cluster = cluster };
   for (poss_i_t n = 2; n <= 4; n++) {
