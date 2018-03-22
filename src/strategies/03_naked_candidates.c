@@ -8,7 +8,7 @@ typedef struct _state {
   cluster_t *cluster;
 } _state;
 
-static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
+static void _cluster_cb(poss_i_t n, pos_t positions[n], void *state_ptr) {
   _state *state = state_ptr;
   val_t poss_arr[10] = {0};
 

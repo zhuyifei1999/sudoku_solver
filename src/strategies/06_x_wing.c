@@ -43,7 +43,7 @@ static bool _is_pair(_state *state, cluster_t cluster_pre,
   return *cluster_rm_1 && *cluster_rm_2;
 }
 
-static void _cluster_cb(poss_i_t n, pos_t *positions, void *state_ptr) {
+static void _cluster_cb(poss_i_t n, pos_t positions[2], void *state_ptr) {
   _state *state = state_ptr;
 
   cluster_t *cluster_rm_a_1 = NULL;
