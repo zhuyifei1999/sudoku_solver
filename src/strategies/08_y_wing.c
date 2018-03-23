@@ -92,7 +92,7 @@ static void _bc_cluster(sudoku_t *sudoku, pos_t AB, cluster_t BC_c) {
   }))
 }
 
-bool y_wing(sudoku_t *sudoku) {
+STRATEGY("Y-Wing", 8) {
   // find AB, containing two possibilities, A & B
   for_pos_cluster_zero(all_c, AB, ({
     if (sudoku->arr[AB.i][AB.j]) continue;

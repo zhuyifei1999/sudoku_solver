@@ -64,7 +64,7 @@ static void _cluster_gen(sudoku_t *sudoku, val_t val,
   }))
 }
 
-bool intersection_removal(sudoku_t *sudoku) {
+STRATEGY("Intersection Removal", 4) {
   for_val(val) {
     // pointing pairs
     _cluster_gen(sudoku, val, cell_c, horz_c);

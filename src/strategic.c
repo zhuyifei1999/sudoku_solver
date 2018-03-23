@@ -1,10 +1,11 @@
 #include "strategic.h"
 #include "possibility.h"
-#include "strategies/all_strategy.h"
 #include "debug.h"
 
 #include <assert.h>
 #include <stdlib.h>
+
+struct all_strategies_t all_strategies = {0};
 
 static void _decr_possible_commit(sudoku_t *sudoku) {
   while (stack_size(sudoku->decr_poss)) {
@@ -90,46 +91,55 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
   }))
 }
 
+static int _init_all_strategies_cmp(const void *a_ptr, const void *b_ptr) {
+  const strategy_t *a = a_ptr;
+  const strategy_t *b = b_ptr;
+  return a->order - b->order;
+}
+
+static void _init_all_strategies() {
+  size_t n; \
+  for (n = 0; (all_strategies.arr[n].func); n++) {}
+  qsort(all_strategies.arr, n, sizeof(strategy_t), &_init_all_strategies_cmp);
+}
+
 void solve_sudoku(sudoku_arr sudoku_arr) {
-  sudoku_t *sudoku = malloc(sizeof(sudoku_t));
-  stack_init(sudoku->ns_pos);
-  stack_init(sudoku->decr_poss);
+  if (!all_strategies.initialized) _init_all_strategies();
+  sudoku_t sudoku = {0};
   for_pos_cluster_zero(all_c, pos, ({
-    sudoku->arr[pos.i][pos.j] = 0;
     if (sudoku_arr[pos.i][pos.j]) {
-      sudoku->possibilities[pos.i][pos.j] = malloc(2*sizeof(val_t));
+      sudoku.possibilities[pos.i][pos.j] = malloc(2*sizeof(val_t));
       // only possibility
-      sudoku->possibilities[pos.i][pos.j][0] = sudoku_arr[pos.i][pos.j];
-      sudoku->possibilities[pos.i][pos.j][1] = 0;
-      stack_push(sudoku->ns_pos, pos);
+      sudoku.possibilities[pos.i][pos.j][0] = sudoku_arr[pos.i][pos.j];
+      sudoku.possibilities[pos.i][pos.j][1] = 0;
+      stack_push(sudoku.ns_pos, pos);
     } else {
       // all 9 possibilities
-      sudoku->possibilities[pos.i][pos.j] = malloc(10*sizeof(val_t));
+      sudoku.possibilities[pos.i][pos.j] = malloc(10*sizeof(val_t));
       for_val(k) {
-        sudoku->possibilities[pos.i][pos.j][k-1] = k;
+        sudoku.possibilities[pos.i][pos.j][k-1] = k;
       }
-      sudoku->possibilities[pos.i][pos.j][9] = 0;
+      sudoku.possibilities[pos.i][pos.j][9] = 0;
     }
   }))
 
   while (true) {
-    bool (*strategy)(sudoku_t *);
-    for (size_t i = 0; (strategy = strategies[i]); i++) {
-      if ((*strategy)(sudoku)) break;
+    bool (*strategy)(sudoku_t *sudoku);
+    for (size_t i = 0; (strategy = all_strategies.arr[i].func); i++) {
+      if ((*strategy)(&sudoku)) break;
     }
     if (!strategy) break;
 
-    size_t decr_poss_size = stack_size(sudoku->decr_poss);
-    if (stack_size(sudoku->decr_poss)) _decr_possible_commit(sudoku);
-    size_t ns_pos_size = stack_size(sudoku->ns_pos);
+    size_t decr_poss_size = stack_size(sudoku.decr_poss);
+    if (stack_size(sudoku.decr_poss)) _decr_possible_commit(&sudoku);
+    size_t ns_pos_size = stack_size(sudoku.ns_pos);
 
     debug_print("stack sizes: ns_pos:%zd; decr_poss:%zd",
       ns_pos_size, decr_poss_size);
   }
 
   for_pos_cluster_zero(all_c, pos, ({
-    sudoku_arr[pos.i][pos.j] = sudoku->arr[pos.i][pos.j];
-    free(sudoku->possibilities[pos.i][pos.j]);
+    sudoku_arr[pos.i][pos.j] = sudoku.arr[pos.i][pos.j];
+    free(sudoku.possibilities[pos.i][pos.j]);
   }))
-  free(sudoku);
 }

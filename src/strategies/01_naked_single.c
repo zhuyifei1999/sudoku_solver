@@ -1,7 +1,7 @@
 #include "../strategic.h"
 #include "../debug.h"
 
-bool naked_single(sudoku_t *sudoku) {
+STRATEGY("Naked Single", 1) {
   if (!stack_size(sudoku->ns_pos)) return false;
   while (stack_size(sudoku->ns_pos)) {
     pos_t pos = stack_pop(sudoku->ns_pos);

@@ -107,7 +107,7 @@ static void _cluster_gen(sudoku_t *sudoku, val_t val,
   combination_cluster(2, *gen_pre.complement, &_cluster_cb, &state);
 }
 
-bool x_wing(sudoku_t *sudoku) {
+STRATEGY("X-Wing", 6) {
   for_val(val) {
     // classic x-wing
     _cluster_gen(sudoku, val, vert_c, horz_c);

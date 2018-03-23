@@ -93,7 +93,7 @@ static bool _cluster_color_see(_state *state, pos_t position,
   return false;
 }
 
-bool singles_chains(sudoku_t *sudoku) {
+STRATEGY("Single's Chains", 7) {
   for_val(val) {
     _state state = { .sudoku = sudoku, .tbl = {{{0}}}, .val = val, .id = 0 };
 

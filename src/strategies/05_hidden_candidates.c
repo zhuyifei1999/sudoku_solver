@@ -62,7 +62,7 @@ static void _cluster(sudoku_t *sudoku, cluster_t cluster) {
 }
 
 
-bool hidden_candidates(sudoku_t *sudoku) {
+STRATEGY("Hidden Candidates", 1) {
   for_pos_cluster(*horz_c.complement, initpos, ({
     _cluster(sudoku, cluster(initpos, horz_c));
   }))

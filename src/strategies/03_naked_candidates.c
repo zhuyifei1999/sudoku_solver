@@ -53,7 +53,7 @@ static void _cluster_gen(sudoku_t *sudoku, cluster_gen_t gen) {
   }))
 }
 
-bool naked_candidates(sudoku_t *sudoku) {
+STRATEGY("Naked Candidates", 3) {
   _cluster_gen(sudoku, horz_c);
   _cluster_gen(sudoku, vert_c);
   _cluster_gen(sudoku, cell_c);

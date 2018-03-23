@@ -1,6 +1,7 @@
 #ifndef STRATEGIC_H_
 #define STRATEGIC_H_
 
+#include "compat.h"
 #include "sudoku.h"
 #include "stack.h"
 
@@ -26,5 +27,33 @@ bool truncate_possible(sudoku_t *sudoku, pos_t position, val_t *poss_arr, bool i
 void place(sudoku_t *sudoku, pos_t position, val_t val);
 
 void solve_sudoku(sudoku_arr sudoku);
+
+typedef struct strategy_t {
+  char *name;
+  bool (*func)(sudoku_t *);
+  unsigned short order;
+} strategy_t;
+
+struct all_strategies_t {
+  bool initialized;
+  strategy_t arr[100];
+};
+
+extern struct all_strategies_t all_strategies;
+
+#define STRATEGY(name_val, order_val) \
+  static bool __strategy(sudoku_t *sudoku); \
+  INITIALIZER(__strategy_init) { \
+    size_t i; \
+    for (i = 0; (all_strategies.arr[i].func); i++) {} \
+    all_strategies.arr[i] = (strategy_t){ \
+      .name = name_val, \
+      .func = &__strategy, \
+      .order = order_val \
+    }; \
+    debug_print("Registered strategy %s with order %hd at index %zd", name_val, order_val, i); \
+  } \
+  static bool __strategy(sudoku_t *sudoku)
+
 
 #endif

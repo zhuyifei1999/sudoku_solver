@@ -85,7 +85,7 @@ static void _cluster_gen(sudoku_t *sudoku, val_t val,
   combination_cluster(3, *gen_pre.complement, &_cluster_cb, &state);
 }
 
-bool swordfish(sudoku_t *sudoku) {
+STRATEGY("Swordfish", 9) {
   for_val(val) {
     _cluster_gen(sudoku, val, vert_c, horz_c);
     _cluster_gen(sudoku, val, horz_c, vert_c);
