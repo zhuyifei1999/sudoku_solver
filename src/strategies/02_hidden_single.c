@@ -15,8 +15,8 @@ static bool _cluster(sudoku_t *sudoku, pos_t position, val_t val, cluster_gen_t 
 
 bool _is_hidden_single(sudoku_t *sudoku, pos_t position, val_t val) {
   return _cluster(sudoku, position, val, vert_c) ||
-    _cluster(sudoku, position, val, horz_c) ||
-    _cluster(sudoku, position, val, cell_c);
+         _cluster(sudoku, position, val, horz_c) ||
+         _cluster(sudoku, position, val, cell_c);
 }
 
 bool hidden_single(sudoku_t *sudoku) {

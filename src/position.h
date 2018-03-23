@@ -43,7 +43,7 @@ typedef struct cluster_t {
 #define for_pos_cluster_zero(cluster_gen, position_var, body) \
   for_pos_cluster(cluster(zero_pos, cluster_gen), position_var, body)
 
-#define is_pos_equal(x, y) (x.i == y.i && x.j == y.j)
+#define is_pos_equal(x, y) ((x).i == (y).i && (x).j == (y).j)
 bool is_pos_cluster(pos_t pos, cluster_t cluster);
 bool is_cluster_equal(cluster_t x, cluster_t y);
 
