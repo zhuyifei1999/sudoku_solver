@@ -56,9 +56,9 @@ static void _color_recurse(_state *state, pos_t pos, bool color) {
     // set the color and recurse into all pairs the position can see
     state->tbl[pos.i][pos.j].id = state->id;
     state->tbl[pos.i][pos.j].color = color;
-    _color_pairs_gen(state, pos, horz_c, !color);
-    _color_pairs_gen(state, pos, vert_c, !color);
-    _color_pairs_gen(state, pos, cell_c, !color);
+    _color_pairs_gen(state, pos, row_c, !color);
+    _color_pairs_gen(state, pos, col_c, !color);
+    _color_pairs_gen(state, pos, box_c, !color);
   }
 }
 
@@ -112,9 +112,9 @@ STRATEGY("Single's Chains", 7) {
       color_t this = state.tbl[pos.i][pos.j];
       unsigned short seen[state.id+1];
       memset(seen, 0, (state.id+1)*sizeof(unsigned short));
-      _cluster_color_see(&state, pos, cluster(pos, vert_c), seen, this) ||
-      _cluster_color_see(&state, pos, cluster(pos, horz_c), seen, this) ||
-      _cluster_color_see(&state, pos, cluster(pos, cell_c), seen, this);
+      _cluster_color_see(&state, pos, cluster(pos, col_c), seen, this) ||
+      _cluster_color_see(&state, pos, cluster(pos, row_c), seen, this) ||
+      _cluster_color_see(&state, pos, cluster(pos, box_c), seen, this);
     }))
 
     while (stack_size(state.collisions)) {

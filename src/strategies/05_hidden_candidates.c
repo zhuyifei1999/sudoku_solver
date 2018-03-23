@@ -63,14 +63,14 @@ static void _cluster(sudoku_t *sudoku, cluster_t cluster) {
 
 
 STRATEGY("Hidden Candidates", 1) {
-  for_pos_cluster(*horz_c.complement, initpos, ({
-    _cluster(sudoku, cluster(initpos, horz_c));
+  for_pos_cluster(*row_c.complement, initpos, ({
+    _cluster(sudoku, cluster(initpos, row_c));
   }))
-  for_pos_cluster(*vert_c.complement, initpos, ({
-    _cluster(sudoku, cluster(initpos, vert_c));
+  for_pos_cluster(*col_c.complement, initpos, ({
+    _cluster(sudoku, cluster(initpos, col_c));
   }))
-  for_pos_cluster(*cell_c.complement, initpos, ({
-    _cluster(sudoku, cluster(initpos, cell_c));
+  for_pos_cluster(*box_c.complement, initpos, ({
+    _cluster(sudoku, cluster(initpos, box_c));
   }))
 
   return stack_size(sudoku->decr_poss);

@@ -87,8 +87,8 @@ static void _cluster_gen(sudoku_t *sudoku, val_t val,
 
 STRATEGY("Swordfish", 9) {
   for_val(val) {
-    _cluster_gen(sudoku, val, vert_c, horz_c);
-    _cluster_gen(sudoku, val, horz_c, vert_c);
+    _cluster_gen(sudoku, val, col_c, row_c);
+    _cluster_gen(sudoku, val, row_c, col_c);
   }
 
   return stack_size(sudoku->decr_poss);

@@ -80,13 +80,13 @@ void place(sudoku_t *sudoku, pos_t position, val_t val) {
   sudoku->possibilities[i][j][0] = val;
   sudoku->possibilities[i][j][1] = 0;
 
-  for_pos_cluster(cluster(position, vert_c), pos, ({
+  for_pos_cluster(cluster(position, col_c), pos, ({
     decr_possible(sudoku, pos, val);
   }))
-  for_pos_cluster(cluster(position, horz_c), pos, ({
+  for_pos_cluster(cluster(position, row_c), pos, ({
     decr_possible(sudoku, pos, val);
   }))
-  for_pos_cluster(cluster(position, cell_c), pos, ({
+  for_pos_cluster(cluster(position, box_c), pos, ({
     decr_possible(sudoku, pos, val);
   }))
 }

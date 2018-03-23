@@ -22,7 +22,7 @@ typedef struct cluster_gen_t {
   const char *name;
 } cluster_gen_t;
 
-extern cluster_gen_t vert_c, horz_c, cell_c, all_c;
+extern cluster_gen_t col_c, row_c, box_c, all_c;
 
 typedef struct cluster_t {
   const pos_t rel;

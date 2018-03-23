@@ -2,67 +2,67 @@
 
 #include <stddef.h>
 
-static void _p_vert_init(pos_t *target, pos_t src) {
+static void _p_col_init(pos_t *target, pos_t src) {
   target->i = 0; target->j = src.j;
 }
-static bool _p_vert_next(pos_t *target) {
+static bool _p_col_next(pos_t *target) {
   return ++target->i < 9;
 }
-static const cluster_t vert_ic = {
+static const cluster_t col_ic = {
   .rel = { .i = 0, .j = 0 },
-  .gen = &horz_c,
+  .gen = &row_c,
 };
-cluster_gen_t vert_c = {
-  .init = &_p_vert_init,
-  .next = &_p_vert_next,
-  .complement = &vert_ic,
-  .name = "vert",
+cluster_gen_t col_c = {
+  .init = &_p_col_init,
+  .next = &_p_col_next,
+  .complement = &col_ic,
+  .name = "col",
 };
 
-static void _p_horz_init(pos_t *target, const pos_t src) {
+static void _p_row_init(pos_t *target, const pos_t src) {
   target->i = src.i; target->j = 0;
 }
-static bool _p_horz_next(pos_t *target) {
+static bool _p_row_next(pos_t *target) {
   return ++target->j < 9;
 }
-static const cluster_t horz_ic = {
+static const cluster_t row_ic = {
   .rel = zero_pos,
-  .gen = &vert_c,
+  .gen = &col_c,
 };
-cluster_gen_t horz_c = {
-  .init = &_p_horz_init,
-  .next = &_p_horz_next,
-  .complement = &horz_ic,
-  .name = "horz",
+cluster_gen_t row_c = {
+  .init = &_p_row_init,
+  .next = &_p_row_next,
+  .complement = &row_ic,
+  .name = "row",
 };
 
-static void _p_cellgen_init(pos_t *target, const pos_t src) {
+static void _p_boxgen_init(pos_t *target, const pos_t src) {
   target->i = target->j = 0;
 }
-static bool _p_cellgen_next(pos_t *target) {
+static bool _p_boxgen_next(pos_t *target) {
   return (target->j += 3) % 9 ? 1 : (target->j -= 9, (target->i += 3) % 9);
 }
-static cluster_gen_t cellgen_c = {
-  .init = &_p_cellgen_init,
-  .next = &_p_cellgen_next,
+static cluster_gen_t boxgen_c = {
+  .init = &_p_boxgen_init,
+  .next = &_p_boxgen_next,
   .complement = NULL,
   .name = NULL,
 };
-static void _p_cell_init(pos_t *target, const pos_t src) {
+static void _p_box_init(pos_t *target, const pos_t src) {
   target->i = src.i / 3 * 3; target->j = src.j / 3 * 3;
 }
-static bool _p_cell_next(pos_t *target) {
+static bool _p_box_next(pos_t *target) {
   return ++target->j % 3 ? 1 : (target->j -= 3, ++target->i % 3);
 }
-static cluster_t cell_ic = {
+static cluster_t box_ic = {
   .rel = zero_pos,
-  .gen = &cellgen_c,
+  .gen = &boxgen_c,
 };
-cluster_gen_t cell_c = {
-  .init = &_p_cell_init,
-  .next = &_p_cell_next,
-  .complement = &cell_ic,
-  .name = "cell",
+cluster_gen_t box_c = {
+  .init = &_p_box_init,
+  .next = &_p_box_next,
+  .complement = &box_ic,
+  .name = "box",
 };
 
 static void _p_all_init(pos_t *target, const pos_t src) {

@@ -41,9 +41,9 @@ static void _c_rm_from_BC(sudoku_t *sudoku, pos_t AB, pos_t BC, pos_t AC,
     if (!is_val_possible(sudoku->possibilities[CD.i][CD.j], C)) continue;
 
     // check CD can see AC
-    if (!(is_pos_cluster(CD, cluster(AC, vert_c)) ||
-          is_pos_cluster(CD, cluster(AC, horz_c)) ||
-          is_pos_cluster(CD, cluster(AC, cell_c))
+    if (!(is_pos_cluster(CD, cluster(AC, col_c)) ||
+          is_pos_cluster(CD, cluster(AC, row_c)) ||
+          is_pos_cluster(CD, cluster(AC, box_c))
     )) continue;
 
     assert(decr_possible(sudoku, CD, C)); // we confirmed the possibility
@@ -68,9 +68,9 @@ static void _ac_cluster(sudoku_t *sudoku, pos_t AB, cluster_t BC_c,
       &B, &A, &C)) continue;
     if (!(ABC_A == A && ABC_B == B && ABC_C == C)) continue;
 
-    _c_rm_from_BC(sudoku, AB, BC, AC, cluster(BC, vert_c), A, B, C);
-    _c_rm_from_BC(sudoku, AB, BC, AC, cluster(BC, horz_c), A, B, C);
-    _c_rm_from_BC(sudoku, AB, BC, AC, cluster(BC, cell_c), A, B, C);
+    _c_rm_from_BC(sudoku, AB, BC, AC, cluster(BC, col_c), A, B, C);
+    _c_rm_from_BC(sudoku, AB, BC, AC, cluster(BC, row_c), A, B, C);
+    _c_rm_from_BC(sudoku, AB, BC, AC, cluster(BC, box_c), A, B, C);
   }))
 }
 
@@ -85,10 +85,10 @@ static void _bc_cluster(sudoku_t *sudoku, pos_t AB, cluster_t BC_c) {
     if (!_ABC(sudoku->possibilities[AB.i][AB.j], sudoku->possibilities[BC.i][BC.j],
       &A, &B, &C)) continue;
 
-    // redundant, vert_c is scaned by BC
-    // _ac_cluster(sudoku, AB, BC_c, BC, cluster(AB, vert_c), A, B, C);
-    if (BC_c.gen == &vert_c) _ac_cluster(sudoku, AB, BC_c, BC, cluster(AB, horz_c), A, B, C);
-    _ac_cluster(sudoku, AB, BC_c, BC, cluster(AB, cell_c), A, B, C);
+    // redundant, col_c is scaned by BC
+    // _ac_cluster(sudoku, AB, BC_c, BC, cluster(AB, col_c), A, B, C);
+    if (BC_c.gen == &col_c) _ac_cluster(sudoku, AB, BC_c, BC, cluster(AB, row_c), A, B, C);
+    _ac_cluster(sudoku, AB, BC_c, BC, cluster(AB, box_c), A, B, C);
   }))
 }
 
@@ -97,10 +97,10 @@ STRATEGY("Y-Wing", 8) {
   for_pos_cluster_zero(all_c, AB, ({
     if (sudoku->arr[AB.i][AB.j]) continue;
     if (poss_size(sudoku->possibilities[AB.i][AB.j]) != 2) continue;
-    _bc_cluster(sudoku, AB, cluster(AB, vert_c));
-    _bc_cluster(sudoku, AB, cluster(AB, horz_c));
-    // redundant, both scanned cell_c for AC
-    // _bc_cluster(sudoku, AB, cluster(AB, cell_c));
+    _bc_cluster(sudoku, AB, cluster(AB, col_c));
+    _bc_cluster(sudoku, AB, cluster(AB, row_c));
+    // redundant, both scanned box_c for AC
+    // _bc_cluster(sudoku, AB, cluster(AB, box_c));
   }));
   return stack_size(sudoku->decr_poss);
 }

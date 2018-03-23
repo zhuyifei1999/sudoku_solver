@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 void print_sudoku(val_t sudoku[9][9]) {
-  for_pos_cluster_zero(vert_c, initpos, ({
-    for_pos_cluster(cluster(initpos, horz_c), pos, ({
+  for_pos_cluster_zero(col_c, initpos, ({
+    for_pos_cluster(cluster(initpos, row_c), pos, ({
       if (pos.j) printf(" ");
       printf(printf_val, sudoku[pos.i][pos.j]);
     }))
